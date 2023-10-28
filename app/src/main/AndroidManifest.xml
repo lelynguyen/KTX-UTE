@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.ktx_ute">
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:targetApi="31">
+        <activity
+            android:name=".activity.NoFunctionActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.AboutActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.SvDangKiPhongShowActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.SvDangKiPhongActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.XoaSinhVienActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.QuanLiSinhVienActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.BqlThemSvActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.BqlThemSvTimPhongActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.BqlSinhVienShowActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.BqlSinhVienActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.BqlPhongShowActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.BqlPhongActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.MenuOptionsBqlActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.NewPasswordActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.ConfirmActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.ForgetPasswordActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.MenuOptionsSvActivity"
+            android:exported="true">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+        <activity
+            android:name=".activity.ChatActivity"
+            android:exported="true">
+
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
+        </activity>
+    </application>
+
+</manifest>
