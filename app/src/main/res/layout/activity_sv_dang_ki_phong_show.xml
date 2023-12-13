@@ -1,43 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:gravity="center_horizontal"
-    android:layout_height="match_parent"
-    android:layout_width="match_parent"
-    android:orientation="vertical"
     style="@style/groupStylegray_51"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
     tools:context=".activity.SvDangKiPhongShowActivity">
 
     <ScrollView
-        android:clipToPadding="false"
-        android:fillViewport="true"
-        android:gravity="start"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_width="match_parent">
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:gravity="start">
 
         <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_12pxh"
             android:layout_marginStart="@dimen/_12pxh"
             android:layout_marginTop="@dimen/_4pxv"
-            android:layout_width="match_parent"
+            android:layout_marginEnd="@dimen/_12pxh"
             android:orientation="vertical">
 
             <LinearLayout
-                android:gravity="start"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_10pxh"
-                android:layout_width="match_parent"
+                android:gravity="start"
                 android:orientation="horizontal">
 
                 <ImageView
                     android:id="@+id/buttonBack"
-                    android:layout_height="@dimen/_20pxh"
-                    android:layout_marginBottom="@dimen/_1pxv"
-                    android:layout_marginTop="@dimen/_4pxv"
                     android:layout_width="@dimen/_20pxh"
+                    android:layout_height="@dimen/_20pxh"
+                    android:layout_marginTop="@dimen/_4pxv"
+                    android:layout_marginBottom="@dimen/_1pxv"
                     android:scaleType="fitXY"
                     android:src="@drawable/img_back1"
                     tools:ignore="ContentDescription" />
@@ -56,57 +55,103 @@
             </LinearLayout>
 
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_10pxh"
+                android:layout_marginTop="@dimen/_16pxv"
+                android:gravity="end"
+                android:orientation="horizontal">
+
+
+                <LinearLayout
+                    style="@style/groupStylebluegray_800cornerRadius"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="0.14"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <ImageButton
+                        android:id="@+id/btnSearch"
+                        android:layout_width="@dimen/_30pxh"
+                        android:layout_height="40dp"
+                        android:layout_gravity="center_horizontal"
+                        android:background="@drawable/rectangle_bg_bluegray_800_radius_7_35"
+                        android:paddingHorizontal="@dimen/_3pxh"
+                        android:paddingVertical="@dimen/_3pxv"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/outline_home_24"
+                        tools:ignore="ContentDescription" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
             <TextView
-                android:ellipsize="end"
-                android:gravity="center_horizontal"
+                style="@style/txtInterbold20"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_26pxh"
                 android:layout_marginStart="@dimen/_26pxh"
                 android:layout_marginTop="@dimen/_25pxv"
-                android:layout_width="match_parent"
+                android:layout_marginEnd="@dimen/_26pxh"
+                android:ellipsize="end"
+                android:gravity="center_horizontal"
                 android:singleLine="true"
-                android:text="THÔNG TIN PHÒNG"
-                style="@style/txtInterbold20" />
+                android:text="THÔNG TIN PHÒNG" />
 
             <TextView
-                android:ellipsize="end"
                 android:id="@+id/txt_loai_phong"
-                android:layout_gravity="start"
+                style="@style/txtInterregular20"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_50pxh"
+                android:layout_gravity="start"
                 android:layout_marginStart="@dimen/_50pxh"
                 android:layout_marginTop="@dimen/_20pxv"
-                android:layout_width="wrap_content"
+                android:layout_marginEnd="@dimen/_50pxh"
+                android:ellipsize="end"
                 android:singleLine="true"
-                android:text="@string/loai_phong"
-                style="@style/txtInterregular20" />
+                android:text="@string/loai_phong" />
 
             <TextView
-                android:ellipsize="end"
                 android:id="@+id/txt_phong"
-                android:layout_gravity="start"
+                style="@style/txtInterregular20"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_50pxh"
+                android:layout_gravity="start"
                 android:layout_marginStart="@dimen/_50pxh"
                 android:layout_marginTop="@dimen/_17pxv"
-                android:layout_width="wrap_content"
+                android:layout_marginEnd="@dimen/_50pxh"
+                android:ellipsize="end"
                 android:singleLine="true"
-                android:text="@string/phong"
-                style="@style/txtInterregular20" />
+                android:text="@string/phong" />
 
             <TextView
-                android:ellipsize="end"
                 android:id="@+id/txt_so_luong"
-                android:layout_gravity="start"
+                style="@style/txtInterregular20"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_50pxh"
+                android:layout_gravity="start"
                 android:layout_marginStart="@dimen/_50pxh"
                 android:layout_marginTop="@dimen/_16pxv"
-                android:layout_width="wrap_content"
+                android:layout_marginEnd="@dimen/_50pxh"
+                android:ellipsize="end"
                 android:singleLine="true"
-                android:text="@string/so_luong"
-                style="@style/txtInterregular20" />
+                android:text="@string/so_luong" />
+
+            <TextView
+                android:id="@+id/txt_so_luong_toi_da"
+                style="@style/txtInterregular20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/_50pxh"
+                android:layout_marginTop="@dimen/_16pxv"
+                android:layout_marginEnd="@dimen/_50pxh"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@string/so_luong" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_xac_nhan"
@@ -127,8 +172,8 @@
                 android:text="ĐĂNG KÍ" />
 
             <LinearLayout
-                style="@style/groupStyleblue_100cornerRadius"
                 android:id="@+id/frame_xac_nhan"
+                style="@style/groupStyleblue_100cornerRadius"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_5pxh"
@@ -147,7 +192,7 @@
                     android:ellipsize="none"
                     android:gravity="center_horizontal"
                     android:maxLines="2"
-                    android:text="Có muốn đăng kí vào phòng 101 không?" />
+                    android:text="Có muốn đăng kí vào phòng này không?" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

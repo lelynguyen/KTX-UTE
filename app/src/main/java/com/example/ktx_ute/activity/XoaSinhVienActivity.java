@@ -1,44 +1,47 @@
 package com.example.ktx_ute.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
-import android.widget.TextView;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
-import com.firstapp.ql_ktx.model.Message;
-import com.firstapp.ql_ktx.adapter.MessageAdapter;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.ktx_ute.R;
-import com.vanniktech.emoji.EmojiManager;
-import com.vanniktech.emoji.EmojiPopup;
-import com.vanniktech.emoji.google.GoogleEmojiProvider;
+import com.example.ktx_ute.apiutils.ApiUtil;
+import com.example.ktx_ute.model.Phong;
+import com.example.ktx_ute.model.SinhVien;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class XoaSinhVienActivity extends AppCompatActivity {
     private LinearLayout frameXacNhan;
     private LinearLayout linearSelect;
-
+    TextView txtHoTen, txtMasv;
+    SinhVien sinhVien;
+    Phong phong;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sinh_vien_bql_xoa_khoi_ktx);
 
-        ImageView buttonBack = findViewById(R.id.buttonBack);
 
+        txtHoTen = findViewById(R.id.txt_hvt);
+        progressBar = findViewById(R.id.progress);
+        txtMasv = findViewById(R.id.txt_mssv);
+        ImageView buttonBack = findViewById(R.id.buttonBack);
+        sinhVien = (SinhVien) getIntent().getSerializableExtra("sinhvien");
+        phong = (Phong) getIntent().getSerializableExtra("phong");
+        txtHoTen.setText("Họ và tên: " + sinhVien.getHoTenSV());
+        txtMasv.setText("MSSV: " + sinhVien.getMaSV());
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -62,9 +65,7 @@ public class XoaSinhVienActivity extends AppCompatActivity {
         btnXoa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Ẩn LinearLayout linearSelect
                 linearSelect.setVisibility(View.GONE);
-                // Hiển thị LinearLayout frame_xac_nhan
                 frameXacNhan.setVisibility(View.VISIBLE);
             }
         });
@@ -86,6 +87,8 @@ public class XoaSinhVienActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Chuyển đến layout BqlThemSvTimPhongActivity
                 Intent intent = new Intent(XoaSinhVienActivity.this, BqlThemSvTimPhongActivity.class);
+                intent.putExtra("phong", phong);
+                intent.putExtra("sinhvien", sinhVien);
                 startActivity(intent);
             }
         });
@@ -95,8 +98,32 @@ public class XoaSinhVienActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Chuyển đến layout QuanLiSinhVienActivity
-                Intent intent = new Intent(XoaSinhVienActivity.this, QuanLiSinhVienActivity.class);
-                startActivity(intent);
+                progressBar.setVisibility(View.VISIBLE);
+                frameXacNhan.setVisibility(View.GONE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        callApi();
+                        progressBar.setVisibility(View.GONE);
+                        Intent intent = new Intent(XoaSinhVienActivity.this, QuanLiSinhVienActivity.class);
+                        startActivity(intent);
+                    }
+                }, 3000);
+
+            }
+        });
+    }
+
+    private void callApi() {
+        ApiUtil.apiutil.deleteSV(sinhVien.getSinhVienID(), phong.getPhongID()).enqueue(new Callback<SinhVien>() {
+            @Override
+            public void onResponse(Call<SinhVien> call, Response<SinhVien> response) {
+                Toast.makeText(XoaSinhVienActivity.this, "Xóa thành công!!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<SinhVien> call, Throwable t) {
+                Toast.makeText(XoaSinhVienActivity.this, "Lôi", Toast.LENGTH_SHORT).show();
             }
         });
     }

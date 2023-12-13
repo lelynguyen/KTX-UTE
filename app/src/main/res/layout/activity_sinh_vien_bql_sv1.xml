@@ -8,7 +8,7 @@
     android:layout_width="match_parent"
     android:orientation="vertical"
     tools:context=".activity.BqlSinhVienActivity"
-    style="@style/groupStylegray_51">s
+    style="@style/groupStylegray_51">
 
     <ScrollView
         android:clipToPadding="false"
@@ -61,52 +61,32 @@
                 android:gravity="end"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_10pxh"
+                android:layout_marginEnd="@dimen/_10pxh"
                 android:layout_marginTop="@dimen/_16pxv"
                 android:layout_width="match_parent"
                 android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/etInputText"
-                    style="@style/etInterregular14"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12pxv"
-                    android:layout_marginBottom="@dimen/_4pxv"
-                    android:layout_weight="0.86"
+                <androidx.appcompat.widget.SearchView
+                    android:background="@drawable/search_view_bg"
+                    android:id="@+id/search_view"
                     android:ellipsize="end"
-                    android:hint = "Nhập MSSV"
                     android:inputType="text"
-                    android:paddingEnd="@dimen/_30pxh"
-                    android:paddingBottom="@dimen/_8pxv"
-                    android:singleLine="true"
-                    android:textColorHint="@color/black_900_7f" />
-
-                <LinearLayout
-                    android:layout_gravity="center_vertical"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_7pxh"
-                    android:layout_weight="0.14"
+                    android:layout_weight="0.86"
                     android:layout_width="0dp"
-                    android:orientation="vertical"
-                    style="@style/groupStylebluegray_800cornerRadius">
+                    android:singleLine="true">
 
-                    <ImageButton
-                        android:background="@drawable/rectangle_bg_bluegray_800_radius_7_35"
-                        android:id="@+id/btnSearch"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_height="@dimen/_26pxh"
-                        android:layout_marginHorizontal="@dimen/_9pxh"
-                        android:layout_marginVertical="@dimen/_9pxv"
-                        android:layout_width="@dimen/_26pxh"
-                        android:paddingHorizontal="@dimen/_3pxh"
-                        android:paddingVertical="@dimen/_3pxv"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/img_search"
-                        tools:ignore="ContentDescription"/>
-
-                </LinearLayout>
+                </androidx.appcompat.widget.SearchView>
 
             </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:padding="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </androidx.recyclerview.widget.RecyclerView>
 
         </LinearLayout>
 

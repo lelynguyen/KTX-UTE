@@ -1,14 +1,24 @@
-package com.firstapp.ql_ktx.model;
+package com.example.ktx_ute.model;
 
-public class Message {
+public class Message extends ChatModel {
+    private int id;
     private String username;
     private String message;
     private String time;
 
-    public Message(String username, String message, String time) {
+    public Message(int id, String username, String message, String time) {
+        this.id = id;
         this.username = username;
         this.message = message;
         this.time = time;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getUsername() {

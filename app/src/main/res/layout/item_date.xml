@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="8dp"
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/textView_Date"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:background="@drawable/background_date"
+        android:text="22:30 30/12/2025"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:gravity="center"/>
+
+</LinearLayout>

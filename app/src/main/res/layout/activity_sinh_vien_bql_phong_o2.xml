@@ -63,28 +63,12 @@
                 android:layout_width="match_parent"
                 android:orientation="horizontal">
 
-                <EditText
-                    android:ellipsize="end"
-                    android:hint="@string/nhap_so_phong"
-                    android:id="@+id/etInputText"
-                    android:inputType="text"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_4pxv"
-                    android:layout_marginTop="@dimen/_12pxv"
-                    android:layout_weight="0.86"
-                    android:layout_width="0dp"
-                    android:paddingBottom="@dimen/_8pxv"
-                    android:paddingEnd="@dimen/_30pxh"
-                    android:singleLine="true"
-                    android:textColorHint="@color/black_900_7f"
-                    style="@style/etInterregular14"
-                    />
+
 
                 <LinearLayout
                     android:layout_gravity="center_vertical"
                     android:gravity="center_horizontal"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_7pxh"
                     android:layout_weight="0.14"
                     android:layout_width="0dp"
                     android:orientation="vertical"
@@ -94,14 +78,12 @@
                         android:background="@drawable/rectangle_bg_bluegray_800_radius_7_35"
                         android:id="@+id/btnSearch"
                         android:layout_gravity="center_horizontal"
-                        android:layout_height="@dimen/_26pxh"
-                        android:layout_marginHorizontal="@dimen/_9pxh"
-                        android:layout_marginVertical="@dimen/_9pxv"
-                        android:layout_width="@dimen/_26pxh"
+                        android:layout_height="40dp"
+                        android:layout_width="@dimen/_30pxh"
                         android:paddingHorizontal="@dimen/_3pxh"
                         android:paddingVertical="@dimen/_3pxv"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/img_search"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/outline_home_24"
                         tools:ignore="ContentDescription"/>
 
                 </LinearLayout>
@@ -149,6 +131,19 @@
             <TextView
                 android:ellipsize="end"
                 android:id="@+id/txt_so_luong"
+                android:layout_gravity="start"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_50pxh"
+                android:layout_marginStart="@dimen/_50pxh"
+                android:layout_marginTop="@dimen/_16pxv"
+                android:layout_width="wrap_content"
+                android:singleLine="true"
+                android:text="@string/so_luong"
+                style="@style/txtInterregular20" />
+
+            <TextView
+                android:ellipsize="end"
+                android:id="@+id/txt_so_luong_toi_da"
                 android:layout_gravity="start"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_50pxh"

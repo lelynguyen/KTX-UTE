@@ -1,7 +1,6 @@
-package com.firstapp.ql_ktx.adapter;
+package com.example.ktx_ute.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,85 +9,88 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.firstapp.ql_ktx.model.Message;
+import com.example.ktx_ute.model.ChatModel;
+import com.example.ktx_ute.model.DateModel;
+import com.example.ktx_ute.model.Message;
 import com.example.ktx_ute.R;
 
 import java.util.List;
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHolder> {
+public class MessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    public static final int TYPE_LEFT_START = 0;
-    public static final int TYPE_LEFT = 1;
-    public static final int TYPE_RIGHT = 2;
+    public static final int TYPE_DATE = 0;
+    public static final int TYPE_LEFT_START = 1;
+    public static final int TYPE_LEFT = 2;
+    public static final int TYPE_RIGHT = 3;
 
     private Context context;
-    private List<Message> messages;
-    private Message message;
-    private String fakeUser = "Sinh viên A";
+    private List<ChatModel> chatModels;
+    private String fakeUser = "2";
 
-    public MessageAdapter(Context context, List<Message> messages) {
+    private int userID;
+
+    public MessageAdapter(Context context, int userID, List<ChatModel> chatModels) {
         this.context = context;
-        this.messages = messages;
+        this.chatModels = chatModels;
+        this.userID = userID;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view;
         switch (viewType)
         {
             case TYPE_LEFT_START:
                 view = LayoutInflater.from(context).inflate(R.layout.item_message_start_left, parent, false);
-                return new ViewHolder(view, true);
+                return new MessageViewHolder(view, true);
             case TYPE_LEFT:
                 view = LayoutInflater.from(context).inflate(R.layout.item_message_left, parent, false);
-                return new ViewHolder(view, false);
+                return new MessageViewHolder(view, false);
             case TYPE_RIGHT:
                 view = LayoutInflater.from(context).inflate(R.layout.item_message_right, parent, false);
-                return new ViewHolder(view, false);
+                return new MessageViewHolder(view, false);
+            case TYPE_DATE:
+                view = LayoutInflater.from(context).inflate(R.layout.item_date, parent, false);
+                return new DateViewHolder(view);
         }
         return null;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        message = messages.get(position);
-        if (message == null)
-            return;
-
-        holder.setUsername(message.getUsername());
-        holder.textViewMessage.setText(message.getMessage());
-        holder.textViewTime.setText(message.getTime());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        int type = holder.getItemViewType();
+        switch (type) {
+            case TYPE_DATE:
+                DateModel dateModel = (DateModel) chatModels.get(position);
+                ((DateViewHolder)holder).bind(dateModel);
+                break;
+            default:
+                Message message = (Message) chatModels.get(position);
+                ((MessageViewHolder)holder).bind(message);
+                break;
+        }
     }
 
     @Override
     public int getItemCount() {
-        if (messages != null)
-            return messages.size();
+        if (chatModels != null)
+            return chatModels.size();
         return 0;
     }
 
     @Override
     public int getItemViewType(int position) {
-        message = messages.get(position);
-        Log.d("My Debug", "" + position);
-        if (message.getUsername().equals(fakeUser))
-            return 2;
-        if (position == 0)
-            return 0;
-        if (message.getUsername().equals(messages.get(position-1).getUsername()))
-            return 1;
-        return 0;
-//        return super.getItemViewType(position);
+        return chatModels.get(position).getType();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView textViewUsername;
-        public TextView textViewMessage;
-        public TextView textViewTime;
-        public boolean hasUsername;
+    public class MessageViewHolder extends RecyclerView.ViewHolder {
+        private TextView textViewUsername;
+        private TextView textViewMessage;
+        private TextView textViewTime;
+        private boolean hasUsername;
 
-        public ViewHolder(@NonNull View itemView, boolean hasUsername) {
+        public MessageViewHolder(@NonNull View itemView, boolean hasUsername) {
             super(itemView);
             this.hasUsername = hasUsername;
             if (hasUsername) {
@@ -104,6 +106,23 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.ViewHold
             }
         }
 
+        public void bind(Message message) {
+            setUsername(message.getUsername());
+            textViewMessage.setText(message.getMessage());
+            textViewTime.setText(message.getTime());
+        }
     }
 
+    public class DateViewHolder extends RecyclerView.ViewHolder {
+        private TextView textViewDate;
+
+        public DateViewHolder(@NonNull View itemView) {
+            super(itemView);
+            this.textViewDate = itemView.findViewById(R.id.textView_Date);
+        }
+
+        public void bind(DateModel dateModel) {
+            textViewDate.setText(dateModel.getDatetime());
+        }
+    }
 }

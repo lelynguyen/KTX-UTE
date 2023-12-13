@@ -108,6 +108,29 @@
                 android:text="@string/so_luong"
                 style="@style/txtInterregular20" />
 
+            <TextView
+                android:ellipsize="end"
+                android:id="@+id/txt_so_luong_toi_da"
+                android:layout_gravity="start"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/_50pxh"
+                android:layout_marginStart="@dimen/_50pxh"
+                android:layout_marginTop="@dimen/_16pxv"
+                android:layout_width="wrap_content"
+                android:singleLine="true"
+                android:text="Số lượng tối đa: 8"
+                style="@style/txtInterregular20" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </ProgressBar>
+
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_xac_nhan"
                 style="@style/btnSolidRounded"

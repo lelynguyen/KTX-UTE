@@ -9,12 +9,12 @@
     android:orientation="horizontal"
     android:gravity="left">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/imageUserProfile"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:src="#95c3ff"
-        android:layout_marginRight="8dp"/>
+<!--    <de.hdodenhof.circleimageview.CircleImageView-->
+<!--        android:id="@+id/imageUserProfile"-->
+<!--        android:layout_width="40dp"-->
+<!--        android:layout_height="40dp"-->
+<!--        android:src="#95c3ff"-->
+<!--        android:layout_marginRight="8dp"/>-->
 
     <LinearLayout
         android:id="@+id/layoutMessage"

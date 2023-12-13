@@ -1,10 +1,16 @@
 package com.example.ktx_ute.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView; // Thêm import này
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.ktx_ute.AdminData;
+import com.example.ktx_ute.Global;
 import com.example.ktx_ute.R;
 
 public class MenuOptionsBqlActivity extends AppCompatActivity {
@@ -14,6 +20,9 @@ public class MenuOptionsBqlActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu_options_bql);
 
+        TextView textViewName = findViewById(R.id.textViewName);
+        textViewName.setText(Global.getService(AdminData.class).getFullname());
+
         ImageView imageView3 = findViewById(R.id.imageView3);
         ImageView imageView4 = findViewById(R.id.imageView4);
         ImageView imageView5 = findViewById(R.id.imageView5);
@@ -21,6 +30,10 @@ public class MenuOptionsBqlActivity extends AppCompatActivity {
         imageView3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences sharedPreferences = getSharedPreferences("Login", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("isLogged", false);
+                editor.apply();
                 Intent intent = new Intent(MenuOptionsBqlActivity.this, LoginActivity.class);
                 startActivity(intent);
             }

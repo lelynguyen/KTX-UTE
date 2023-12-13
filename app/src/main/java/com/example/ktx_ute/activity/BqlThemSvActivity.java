@@ -1,42 +1,51 @@
 package com.example.ktx_ute.activity;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.AppCompatButton;
 
-import android.content.Intent;
-import android.widget.LinearLayout;
-import android.os.Bundle;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
-import android.widget.ImageView;
-
-import com.firstapp.ql_ktx.model.Message;
-import com.firstapp.ql_ktx.adapter.MessageAdapter;
 import com.example.ktx_ute.R;
-import com.vanniktech.emoji.EmojiManager;
-import com.vanniktech.emoji.EmojiPopup;
-import com.vanniktech.emoji.google.GoogleEmojiProvider;
+import com.example.ktx_ute.apiutils.ApiUtil;
+import com.example.ktx_ute.model.Phong;
+import com.example.ktx_ute.model.SinhVien;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BqlThemSvActivity extends AppCompatActivity {
     private LinearLayout frameXacNhan;
-
+    TextView txtLoaiPhong, txtPhong, txtSoLuong, txtSoLuongToiDa;
+    Phong phong;
+    SinhVien sinhVien;
+    ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sinh_vien_bql_them_vao_phong);
 
+        progressBar = findViewById(R.id.progress);
         ImageView buttonBack = findViewById(R.id.buttonBack);
+        txtLoaiPhong = findViewById(R.id.txt_loai_phong);
+        txtSoLuongToiDa = findViewById(R.id.txt_so_luong_toi_da);
+        txtPhong = findViewById(R.id.txt_phong);
+        txtSoLuong = findViewById(R.id.txt_so_luong);
+        phong = (Phong) getIntent().getSerializableExtra("phong");
+        sinhVien = (SinhVien) getIntent().getSerializableExtra("sinhvien");
+
+        txtSoLuong.setText("Số lượng hiện tại: " + phong.getSoLuongHienTai().toString());
+        txtSoLuongToiDa.setText("Số lượng tối đa: " + phong.getSoLuongToiDa().toString());
+        txtPhong.setText("Phòng: " + phong.getSoPhong().toString());
+        txtLoaiPhong.setText("Loại phòng: " + phong.getLoaiPhong().toString());
 
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,6 +70,7 @@ public class BqlThemSvActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Hiển thị LinearLayout frame_xac_nhan khi người dùng nhấn nút btn_xac_nhan
                 frameXacNhan.setVisibility(View.VISIBLE);
+                btnXacNhan.setVisibility(View.GONE);
             }
         });
 
@@ -68,9 +78,19 @@ public class BqlThemSvActivity extends AppCompatActivity {
         btnDongY.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                frameXacNhan.setVisibility(View.GONE);
+                progressBar.setVisibility(View.VISIBLE);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        callApi();
+                        progressBar.setVisibility(View.GONE);
+                        Intent intent = new Intent(BqlThemSvActivity.this, QuanLiSinhVienActivity.class);
+                        intent.putExtra("phong", phong);
+                        startActivity(intent);
+                    }
+                }, 4000);
                 // Trở về layout activity_sinh_vien_bql_sv1.xml khi người dùng nhấn nút btn_dong_y
-                Intent intent = new Intent(BqlThemSvActivity.this, BqlSinhVienActivity.class);
-                startActivity(intent);
             }
         });
 
@@ -80,6 +100,20 @@ public class BqlThemSvActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Ẩn LinearLayout frame_xac_nhan khi người dùng nhấn nút btn_huy
                 frameXacNhan.setVisibility(View.GONE);
+            }
+        });
+    }
+
+    private void callApi() {
+        ApiUtil.apiutil.dangkyphong(sinhVien.getSinhVienID(), phong.getPhongID()).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(BqlThemSvActivity.this, "Thay đổi thành công!!", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(BqlThemSvActivity.this, "Lỗi!!", Toast.LENGTH_SHORT).show();
             }
         });
     }

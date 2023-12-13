@@ -51,123 +51,132 @@
                     android:layout_weight="0.9"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@string/QUAN_LY_SINH_VIEN" />
+                    android:text="@string/QUAN_LY_SINH_VIEN"
+                    tools:ignore="TextSizeCheck" />
 
             </LinearLayout>
 
             <TextView
-                android:ellipsize="end"
-                android:layout_gravity="center_horizontal"
+                style="@style/txtInterbold20"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_10pxh"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginStart="@dimen/_10pxh"
                 android:layout_marginTop="@dimen/_32pxv"
-                android:layout_width="wrap_content"
+                android:layout_marginEnd="@dimen/_10pxh"
+                android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/ho_so"
-                style="@style/txtInterbold20" />
-
-            <View android:background="@color/bluegray_100"
-                android:id="@+id/viewRectangleFour"
-                android:layout_gravity="center_horizontal"
-                android:layout_height="@dimen/_124pxh"
-                android:layout_marginEnd="@dimen/_10pxh"
-                android:layout_marginStart="@dimen/_10pxh"
-                android:layout_marginTop="@dimen/_11pxv"
-                android:layout_width="@dimen/_95pxh"/>
+                tools:ignore="TextSizeCheck" />
 
             <TextView
                 android:id="@+id/txt_hvt"
-                android:ellipsize="end"
-                android:gravity="start"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_45pxh"
-                android:layout_marginStart="@dimen/_45pxh"
-                android:layout_marginTop="@dimen/_18pxv"
+                style="@style/txtInterregular20"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="@dimen/_18pxv"
+                android:layout_marginEnd="10dp"
+                android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/ho_va_ten"
-                style="@style/txtInterregular20" />
+                android:textAlignment="center"
+                tools:ignore="TextSizeCheck" />
 
             <TextView
-                android:ellipsize="end"
-                android:gravity="start"
                 android:id="@+id/txt_mssv"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_45pxh"
-                android:layout_marginStart="@dimen/_45pxh"
-                android:layout_marginTop="@dimen/_15pxv"
+
+                style="@style/txtInterregular20"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="@dimen/_15pxv"
+                android:layout_marginEnd="10dp"
+                android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/mssv"
-                style="@style/txtInterregular20" />
+                android:textAlignment="center"
+                tools:ignore="TextSizeCheck" />
 
             <TextView
-                android:ellipsize="end"
-                android:gravity="start"
                 android:id="@+id/txt_khoa"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_45pxh"
-                android:layout_marginStart="@dimen/_45pxh"
-                android:layout_marginTop="@dimen/_18pxv"
+                style="@style/txtInterregular20"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="@dimen/_18pxv"
+                android:layout_marginEnd="10dp"
+                android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/khoa_cong_nghe_so"
-                style="@style/txtInterregular20" />
+                android:textAlignment="center"
+                tools:ignore="TextSizeCheck" />
 
             <TextView
-                android:ellipsize="end"
-                android:gravity="start"
                 android:id="@+id/txt_lop_sinh_hoat"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_45pxh"
-                android:layout_marginStart="@dimen/_45pxh"
-                android:layout_marginTop="@dimen/_17pxv"
+                style="@style/txtInterregular20"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="@dimen/_17pxv"
+                android:layout_marginEnd="10dp"
+                android:ellipsize="end"
                 android:singleLine="true"
                 android:text="@string/lop_sinh_hoat"
-                style="@style/txtInterregular20"
-                />
+                android:textAlignment="center"
+                tools:ignore="TextSizeCheck" />
+
+            <ProgressBar
+                android:id="@+id/progress"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </ProgressBar>
 
             <LinearLayout
                 android:id="@+id/linearSelect"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/_10pxh"
                 android:layout_marginStart="@dimen/_10pxh"
-                android:layout_marginTop="@dimen/_54pxv"
+                android:layout_marginTop="30dp"
                 android:layout_width="match_parent"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:gravity="center"
-                    android:ellipsize="end"
                     android:id="@+id/txt_doi_phong"
+                    style="@style/txtSolidRounded"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="0.5"
-                    android:layout_width="0dp"
-                    android:paddingBottom="@dimen/_5pxv"
-                    android:paddingEnd="@dimen/_8pxh"
+                    android:ellipsize="end"
+                    android:gravity="center"
                     android:paddingStart="@dimen/_7pxh"
                     android:paddingTop="@dimen/_2pxv"
+                    android:paddingEnd="@dimen/_8pxh"
+                    android:paddingBottom="@dimen/_5pxv"
                     android:singleLine="true"
                     android:text="@string/doi_phong"
-                    style="@style/txtSolidRounded" />
+                    tools:ignore="TextSizeCheck" />
 
                 <TextView
-                    android:gravity="center"
-                    android:ellipsize="end"
                     android:id="@+id/btn_xoa"
+                    style="@style/txtSolidRounded"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/_108pxh"
                     android:layout_weight="0.5"
-                    android:layout_width="0dp"
-                    android:paddingBottom="@dimen/_5pxv"
-                    android:paddingEnd="@dimen/_30pxh"
+                    android:ellipsize="end"
+                    android:gravity="center"
                     android:paddingStart="@dimen/_30pxh"
                     android:paddingTop="@dimen/_2pxv"
+                    android:paddingEnd="@dimen/_30pxh"
+                    android:paddingBottom="@dimen/_5pxv"
                     android:singleLine="true"
                     android:text="@string/xoa"
-                    style="@style/txtSolidRounded" />
+                    tools:ignore="TextSizeCheck" />
             </LinearLayout>
 
             <LinearLayout
@@ -181,15 +190,16 @@
                 style="@style/groupStyleblue_100cornerRadius">
 
                 <TextView
-                    android:maxLines="2"
-                    android:gravity="center_horizontal"
+                    style="@style/txtInterregular16"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/_35pxh"
                     android:layout_marginStart="@dimen/_35pxh"
                     android:layout_marginTop="@dimen/_6pxv"
-                    android:layout_width="match_parent"
+                    android:layout_marginEnd="@dimen/_35pxh"
+                    android:gravity="center_horizontal"
+                    android:maxLines="2"
                     android:text="@string/co_muon_xoa"
-                    style="@style/txtInterregular16" />
+                    tools:ignore="TextSizeCheck" />
 
                 <LinearLayout
                     android:layout_height="wrap_content"
@@ -201,31 +211,33 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:gravity="center"
-                        android:ellipsize="end"
                         android:id="@+id/txt_button_dong_y"
+                        style="@style/txtSolidRounded"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="0.5"
-                        android:layout_width="0dp"
-                        android:paddingBottom="@dimen/_5pxv"
+                        android:ellipsize="end"
+                        android:gravity="center"
                         android:paddingTop="@dimen/_2pxv"
+                        android:paddingBottom="@dimen/_5pxv"
                         android:singleLine="true"
                         android:text="@string/dong_y"
-                        style="@style/txtSolidRounded" />
+                        tools:ignore="TextSizeCheck" />
 
                     <TextView
-                        android:gravity="center"
-                        android:ellipsize="end"
                         android:id="@+id/txt_button_huy"
+                        style="@style/txtSolidRounded"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/_108pxh"
                         android:layout_weight="0.5"
-                        android:layout_width="0dp"
-                        android:paddingBottom="@dimen/_5pxv"
+                        android:ellipsize="end"
+                        android:gravity="center"
                         android:paddingTop="@dimen/_2pxv"
+                        android:paddingBottom="@dimen/_5pxv"
                         android:singleLine="true"
                         android:text="@string/huy"
-                        style="@style/txtSolidRounded" />
+                        tools:ignore="TextSizeCheck" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

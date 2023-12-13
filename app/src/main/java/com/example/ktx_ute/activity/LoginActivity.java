@@ -1,43 +1,50 @@
 package com.example.ktx_ute.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.app.AppCompatDelegate;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
-import com.firstapp.ql_ktx.model.Message;
-import com.firstapp.ql_ktx.adapter.MessageAdapter;
-import com.example.ktx_ute.R;
-import com.vanniktech.emoji.EmojiManager;
-import com.vanniktech.emoji.EmojiPopup;
-import com.vanniktech.emoji.google.GoogleEmojiProvider;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import com.example.ktx_ute.AdminData;
+import com.example.ktx_ute.Global;
+import com.example.ktx_ute.R;
+import com.example.ktx_ute.StudentData;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 
 public class LoginActivity extends AppCompatActivity {
+    private static final int USER_STUDENT = 0;
+    private static final int USER_ADMIN = 1;
 
     private ImageView eyeImageView;
-    private EditText passwordEditText;
+    private EditText passwordEditText, UserEditText;
     private boolean isPasswordVisible = false;
+    private boolean isLoginInProcess = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+        checkLogged();
+
+
         eyeImageView = findViewById(R.id.imageView8);
         passwordEditText = findViewById(R.id.loginPassword);
+        UserEditText = findViewById(R.id.loginName);
 
         // Ánh xạ các button và TextView
         View btnLoginSv = findViewById(R.id.btn_login_sv);
@@ -49,8 +56,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Chuyển đến layout activity_menu_options_sv.xml
-                Intent intent = new Intent(LoginActivity.this, MenuOptionsSvActivity.class);
-                startActivity(intent);
+                if (!isLoginInProcess) {
+                    String tk = UserEditText.getText().toString();
+                    String mk = passwordEditText.getText().toString();
+                    Global.getInstance().makeToast("Đang kiểm tra");
+                    LoginSVAsyncTask loginSVAsyncTask = new LoginSVAsyncTask(LoginActivity.this,tk,mk);
+                    loginSVAsyncTask.execute();
+                    isLoginInProcess = true;
+                }
             }
         });
 
@@ -59,8 +72,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Chuyển đến layout activity_menu_options_bql.xml
-                Intent intent = new Intent(LoginActivity.this, MenuOptionsBqlActivity.class);
-                startActivity(intent);
+                if (!isLoginInProcess) {
+                    String tk = UserEditText.getText().toString();
+                    String mk = passwordEditText.getText().toString();
+                    Global.getInstance().makeToast("Đang kiểm tra");
+                    LoginAdminAsyncTask loginAdminAsyncTask = new LoginAdminAsyncTask(LoginActivity.this,tk,mk);
+                    loginAdminAsyncTask.execute();
+                    isLoginInProcess = true;
+                }
             }
         });
 
@@ -90,5 +109,187 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void startIntentSV() {
+        Global.getInstance().makeToast("Thành công");
+        isLoginInProcess = false;
+        Global.setLoginStatus(true);
+        Intent intent = new Intent(LoginActivity.this, MenuOptionsSvActivity.class);
+        startActivity(intent);
+    }
+
+    public void startIntentAdmin() {
+        Global.getInstance().makeToast("Thành công");
+        isLoginInProcess = false;
+        Global.setLoginStatus(true);
+        Intent intent = new Intent(LoginActivity.this, MenuOptionsBqlActivity.class);
+        startActivity(intent);
+    }
+
+    private void checkLogged() {
+        if (Global.IsLogged()) {
+            return;
+        }
+        SharedPreferences sharedPreferences = getSharedPreferences("Login", MODE_PRIVATE);
+        boolean isLogged = sharedPreferences.getBoolean("isLogged", false);
+        if (!isLogged) {
+            return;
+        }
+
+        String result = sharedPreferences.getString("result", "");
+        int userType = sharedPreferences.getInt("type", -1);
+        switch (userType) {
+            case USER_ADMIN:
+                isLoginInProcess = true;
+                Global.getService(AdminData.class).initData(result, LoginActivity.this);
+                break;
+            case USER_STUDENT:
+                isLoginInProcess = true;
+                Global.getService(StudentData.class).initData(result, LoginActivity.this);
+                break;
+        }
+    }
+
+    private void loginSuccessful(int type, String result) {
+        SharedPreferences sharedPreferences = getSharedPreferences("Login", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isLogged", true);
+        editor.putInt("type", type);
+        editor.putString("result", result);
+        editor.apply();
+    }
+
+    public class LoginSVAsyncTask extends AsyncTask<Void , Void , Void> {
+        String url_API = "https://spaceofme.000webhostapp.com/api_ktx/login.php";
+        Context context;
+        String Tk,MK;
+        String result;
+
+        public LoginSVAsyncTask(Context context, String tk , String mk) {
+            this.context = context;
+            Tk = tk;
+            MK = mk;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                //1 lấy đường dẫn
+                URL url  = new URL(url_API);
+                //2 xử lý port
+                String params ="tenDangNhap=" + URLEncoder.encode(Tk,"utf-8") +
+                        "&matKhau=" + URLEncoder.encode(MK,"utf-8");
+                //3 mờ kết nối
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                //4 set tham so
+                httpURLConnection.setDoOutput(true);//co lay output
+                httpURLConnection.setRequestMethod("POST");// xac dinh method
+                httpURLConnection.setFixedLengthStreamingMode(params.getBytes().length);
+                httpURLConnection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(params.getBytes());
+                outputStream.flush();
+                outputStream.close();
+
+                String line = "";
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((line= bufferedReader.readLine())!=null){
+                    stringBuilder.append(line);
+                }
+                result = stringBuilder.toString();
+                httpURLConnection.disconnect();
+            }catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            Log.e("HttpResult", result);
+            if (!result.equals("[]")) {
+                loginSuccessful(USER_STUDENT, result);
+                Global.getService(StudentData.class).initData(result, LoginActivity.this);
+            } else {
+                Global.getInstance().makeToast("Sai thông tin");
+                isLoginInProcess = false;
+                Log.e("LoginResult", "FAILED");
+            }
+        }
+    }
+
+
+    public class LoginAdminAsyncTask extends AsyncTask<Void , Void , Void> {
+        String url_API = "https://spaceofme.000webhostapp.com/api_ktx/login_admin.php";
+        Context context;
+        String Tk,MK;
+        String result;
+
+        public LoginAdminAsyncTask(Context context, String tk , String mk) {
+            this.context = context;
+            Tk = tk;
+            MK = mk;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                //1 lấy đường dẫn
+                URL url  = new URL(url_API);
+                //2 xử lý port
+                String params ="tenDangNhap=" + URLEncoder.encode(Tk,"utf-8") +
+                        "&matKhau=" + URLEncoder.encode(MK,"utf-8");
+                //3 mờ kết nối
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+                //4 set tham so
+                httpURLConnection.setDoOutput(true);//co lay output
+                httpURLConnection.setRequestMethod("POST");// xac dinh method
+                httpURLConnection.setFixedLengthStreamingMode(params.getBytes().length);
+                httpURLConnection.setRequestProperty("Content-type", "application/x-www-form-urlencoded");
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(params.getBytes());
+                outputStream.flush();
+                outputStream.close();
+
+                String line = "";
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpURLConnection.getInputStream()));
+                StringBuilder stringBuilder = new StringBuilder();
+                while ((line= bufferedReader.readLine())!=null){
+                    stringBuilder.append(line);
+                }
+                result = stringBuilder.toString();
+                httpURLConnection.disconnect();
+            }catch (Exception ex) {
+                ex.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(Void unused) {
+            Log.e("HttpResult", result);
+            if (result.contains("admin")) {
+                loginSuccessful(USER_ADMIN, result);
+                Global.getService(AdminData.class).initData(result, LoginActivity.this);
+            } else {
+                Global.getInstance().makeToast("Sai thông tin");
+                isLoginInProcess = false;
+                Log.e("LoginResult", "FAILED");
+            }
+        }
     }
 }

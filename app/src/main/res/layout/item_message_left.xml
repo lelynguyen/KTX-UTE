@@ -4,7 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="8dp"
-    android:paddingVertical="1dp">
+    android:paddingVertical="1dp"
+    android:orientation="horizontal"
+    android:gravity="left">
 
     <LinearLayout
         android:id="@+id/layoutMessage"
@@ -13,7 +15,6 @@
         android:background="@drawable/background_message"
         android:backgroundTint="#bfcddf"
         android:orientation="vertical"
-        android:layout_marginLeft="48dp"
         android:paddingHorizontal="16dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp">

@@ -31,7 +31,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         app:layout_constraintStart_toStartOf="@+id/topView"
-        app:layout_constraintEnd_toStartOf="@+id/textViewRoomNumber"
+        app:layout_constraintEnd_toStartOf="@+id/textViewRoomName"
         app:layout_constraintBottom_toBottomOf="@+id/topView"
         app:layout_constraintTop_toTopOf="@+id/topView" >
         <ImageView
@@ -43,7 +43,7 @@
     </FrameLayout>
 
     <TextView
-        android:id="@+id/textViewRoomNumber"
+        android:id="@+id/textViewRoomName"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_margin="5dp"
@@ -59,11 +59,12 @@
         android:id="@+id/buttonNotification"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        app:layout_constraintStart_toEndOf="@+id/textViewRoomNumber"
+        app:layout_constraintStart_toEndOf="@+id/textViewRoomName"
         app:layout_constraintEnd_toEndOf="@+id/topView"
         app:layout_constraintTop_toTopOf="@+id/topView"
         app:layout_constraintBottom_toBottomOf="@+id/topView">
         <ImageView
+            android:id="@+id/imageNotification"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_gravity="center"

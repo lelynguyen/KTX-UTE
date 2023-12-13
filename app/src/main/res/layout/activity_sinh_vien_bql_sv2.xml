@@ -56,55 +56,25 @@
             </LinearLayout>
 
             <LinearLayout
-                android:gravity="end"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_horizontal"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10pxh"
-                android:layout_marginTop="@dimen/_16pxv"
                 android:layout_width="match_parent"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                style="@style/groupStylebluegray_800cornerRadius">
 
-                <EditText
-                    android:ellipsize="end"
-                    android:hint="Nhập MSSV"
-                    android:id="@+id/etInputText"
-                    android:inputType="text"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_4pxv"
-                    android:layout_marginTop="@dimen/_12pxv"
-                    android:layout_weight="0.86"
-                    android:layout_width="0dp"
-                    android:paddingBottom="@dimen/_8pxv"
-                    android:paddingEnd="@dimen/_30pxh"
-                    android:singleLine="true"
-                    android:textColorHint="@color/black_900_7f"
-                    style="@style/etInterregular14"
-                    />
-
-                <LinearLayout
-                    android:layout_gravity="center_vertical"
-                    android:gravity="center_horizontal"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/_7pxh"
-                    android:layout_weight="0.14"
-                    android:layout_width="0dp"
-                    android:orientation="vertical"
-                    style="@style/groupStylebluegray_800cornerRadius">
-
-                    <ImageButton
-                        android:background="@drawable/rectangle_bg_bluegray_800_radius_7_35"
-                        android:id="@+id/btnSearch"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_height="@dimen/_26pxh"
-                        android:layout_marginHorizontal="@dimen/_9pxh"
-                        android:layout_marginVertical="@dimen/_9pxv"
-                        android:layout_width="@dimen/_26pxh"
-                        android:paddingHorizontal="@dimen/_3pxh"
-                        android:paddingVertical="@dimen/_3pxv"
-                        android:scaleType="fitCenter"
-                        android:src="@drawable/img_search"
-                        tools:ignore="ContentDescription"/>
-
-                </LinearLayout>
+                <ImageButton
+                    android:background="@drawable/rectangle_bg_bluegray_800_radius_7_35"
+                    android:id="@+id/btnSearch"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="40dp"
+                    android:layout_width="@dimen/_30pxh"
+                    android:paddingHorizontal="@dimen/_3pxh"
+                    android:paddingVertical="@dimen/_3pxv"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/outline_home_24"
+                    tools:ignore="ContentDescription"/>
 
             </LinearLayout>
 
@@ -120,22 +90,13 @@
                 android:text="@string/ho_so"
                 style="@style/txtInterbold20" />
 
-            <View android:background="@color/bluegray_100"
-                android:id="@+id/viewRectangleFour"
-                android:layout_gravity="center_horizontal"
-                android:layout_height="@dimen/_124pxh"
-                android:layout_marginEnd="@dimen/_10pxh"
-                android:layout_marginStart="@dimen/_10pxh"
-                android:layout_marginTop="@dimen/_11pxv"
-                android:layout_width="@dimen/_95pxh"/>
-
             <TextView
                 android:id="@+id/txt_hvt"
                 android:ellipsize="end"
-                android:gravity="start"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_45pxh"
-                android:layout_marginStart="@dimen/_45pxh"
+                android:textAlignment="center"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="@dimen/_18pxv"
                 android:layout_width="match_parent"
                 android:singleLine="true"
@@ -144,11 +105,12 @@
 
             <TextView
                 android:ellipsize="end"
-                android:gravity="start"
+
                 android:id="@+id/txt_mssv"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_45pxh"
-                android:layout_marginStart="@dimen/_45pxh"
+                android:textAlignment="center"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="@dimen/_15pxv"
                 android:layout_width="match_parent"
                 android:singleLine="true"
@@ -157,11 +119,11 @@
 
             <TextView
                 android:ellipsize="end"
-                android:gravity="start"
                 android:id="@+id/txt_khoa"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_45pxh"
-                android:layout_marginStart="@dimen/_45pxh"
+                android:textAlignment="center"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="@dimen/_18pxv"
                 android:layout_width="match_parent"
                 android:singleLine="true"
@@ -170,11 +132,11 @@
 
             <TextView
                 android:ellipsize="end"
-                android:gravity="start"
                 android:id="@+id/txt_lop_sinh_hoat"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_45pxh"
-                android:layout_marginStart="@dimen/_45pxh"
+                android:textAlignment="center"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="@dimen/_17pxv"
                 android:layout_width="match_parent"
                 android:singleLine="true"
