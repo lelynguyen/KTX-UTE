@@ -68,11 +68,11 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="88dp"
             android:layout_marginTop="248dp"
             android:text="CHỨC NĂNG CHƯA ĐƯỢC THIẾT LẬP!!!"
             android:textColor="#0C356A"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <Button

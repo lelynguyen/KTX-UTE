@@ -39,7 +39,7 @@ public class StudentData {
     private String fullname = "";
     private int roomID;
     private int roomNumber;
-    private String currentToken;
+    private String currentToken = "";
 
     private SinhVien sinhVien;
 
@@ -101,22 +101,30 @@ public class StudentData {
     }
 
 
-
     private ValueEventListener tokenListener;
     private boolean isFirstRun = true;
+    private List<String> userIDList = new ArrayList<>();
     public void addTokenListener() {
         isFirstRun = true;
         if (tokenListener == null) {
             tokenListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    int oldSize = tokens.size();
+                    if (!HasRoom()) return;
+
+                    int oldSize = userIDList.size();
                     tokens.clear();
-                    Log.e("RealtimeDatabase", "Trigger");
+                    userIDList.clear();
+
+                    String deviceID = Global.getInstance().getDeviceID();
                     for (DataSnapshot data : snapshot.getChildren()) {
                         UserToken userToken = data.getValue(UserToken.class);
                         Log.e("CacheToken", Integer.parseInt(userToken.getRoomNumber()) + " | " + Integer.parseInt(userToken.getUserID()) + " | " + userToken.getToken());
-                        if (Integer.parseInt(userToken.getRoomNumber()) == roomNumber && Integer.parseInt(userToken.getUserID()) != userID) {
+
+                        if (userIDList.contains(userToken.getUserID())) {
+                            userIDList.add(userToken.getUserID());
+                        }
+                        if (Integer.parseInt(userToken.getRoomNumber()) == roomNumber && !userToken.getDeviceID().equals(deviceID)) {
                             String token = userToken.getToken();
                             tokens.add(userToken.getToken());
                         }
@@ -126,7 +134,7 @@ public class StudentData {
                         isFirstRun = true;
                         return;
                     }
-                    int newSize = tokens.size();
+                    int newSize = userIDList.size();
                     if (newSize < oldSize) {
                         String title = "Phòng " + roomNumber;
                         String body = "Một sinh viên rời phòng";
@@ -153,36 +161,22 @@ public class StudentData {
         }
     }
 
-//    private void generateTokenList() {
-//        FirebaseUtility.getDatabaseReference().addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot snapshot) {
-//
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError error) {
-//
-//            }
-//        });
-//    }
-
     public List<String> getTokens() {
         return tokens;
     }
 
     // Init after login
-    private LoginActivity loginActivity;
+    private ITask iTask;
 
     public void removeToken() {
         removeTokenListener();
-        FirebaseUtility.getDatabaseReference()
-                .child(String.valueOf(userID))
-                .setValue(new UserToken(String.valueOf(userID), String.valueOf(roomNumber), ""));
+        String deviceID = Global.getInstance().getDeviceID();
+        FirebaseUtility.getDatabaseReference().child(deviceID).removeValue();
+        Global.getInstance().removeSharedPreferencesKey("FCM", "deviceID");
     }
 
-    public void initData(String result, LoginActivity loginActivity) {
-        this.loginActivity = loginActivity;
+    public void initData(String result, ITask iTask) {
+        this.iTask = iTask;
         Global.getInstance().makeToast("Thiết lập dữ liệu");
         Log.e("Login", "Start initData");
         updateStudentVariables(result);
@@ -210,7 +204,7 @@ public class StudentData {
                             new ITask() {
                                 @Override
                                 public void onComplete() {
-                                    loginActivity.startIntentSV();
+                                    iTask.onComplete();
                                 }
                             }
                     );
@@ -257,10 +251,11 @@ public class StudentData {
     }
 
     public void updateStudentRoom(String roomID, String roomNumber) {
+        String deviceID = Global.getInstance().getDeviceID();
         setRoom(roomID, roomNumber);
         FirebaseUtility.getDatabaseReference()
-                .child(String.valueOf(userID))
-                .setValue(new UserToken(String.valueOf(userID), String.valueOf(roomNumber), currentToken));
+                .child(deviceID)
+                .setValue(new UserToken(String.valueOf(userID), String.valueOf(roomNumber), currentToken, deviceID));
     }
 
     public void updateUserToken(ITask completedTask) {
@@ -279,14 +274,20 @@ public class StudentData {
                     String token = task.getResult();
                     currentToken = token;
 
-                    FirebaseUtility.getDatabaseReference()
-                            .child(String.valueOf(userID))
-                            .setValue(new UserToken(String.valueOf(userID), String.valueOf(roomNumber), token));
+                    updateRealtimeDatabase();
 
                     if (completedTask != null) {
                         completedTask.onComplete();
                     }
                 }
             });
+    }
+
+    public void updateRealtimeDatabase() {
+        String deviceID = Global.getInstance().getDeviceID();
+        FirebaseUtility.getDatabaseReference()
+                .child(deviceID)
+                .setValue(new UserToken(String.valueOf(userID), String.valueOf(roomNumber), currentToken, deviceID));
+
     }
 }

@@ -102,6 +102,23 @@ public class Global extends Application implements LifecycleObserver {
         return defaultValue;
     }
 
+    public void removeSharedPreferencesKey(String sharedPrefs, String key) {
+        SharedPreferences sharedPreferences = getSharedPreferences(sharedPrefs, MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(key);
+        editor.apply();
+    }
+
+
+    public String getDeviceID() {
+        String deviceID = (String) getSharedPreferencesValue("FCM", "deviceID", "");
+        if (deviceID.isEmpty()) {
+            deviceID = FirebaseUtility.getDatabaseReference().push().getKey();
+            saveSharedPreferencesValue("FCM", "deviceID", deviceID);
+        }
+        return deviceID;
+    }
+
 
     private static HashMap<Class, Object> services = new HashMap<Class, Object>();
 

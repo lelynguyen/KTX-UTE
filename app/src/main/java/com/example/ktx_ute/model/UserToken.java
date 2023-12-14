@@ -4,6 +4,7 @@ public class UserToken {
     private String userID;
     private String roomNumber;
     private String token;
+    private String deviceID;
 
     public String getUserID() {
         return userID;
@@ -29,11 +30,20 @@ public class UserToken {
         this.token = token;
     }
 
+    public String getDeviceID() {
+        return deviceID;
+    }
+
+    public void setDeviceID(String deviceID) {
+        this.deviceID = deviceID;
+    }
+
     public UserToken() {}
 
-    public UserToken(String userID, String roomNumber, String token) {
+    public UserToken(String userID, String roomNumber, String token, String deviceID) {
         this.userID = userID;
         this.roomNumber = roomNumber;
         this.token = token;
+        this.deviceID = deviceID;
     }
 }

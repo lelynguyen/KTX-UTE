@@ -22,6 +22,7 @@ import com.example.ktx_ute.Global;
 import com.example.ktx_ute.R;
 import com.example.ktx_ute.StudentData;
 import com.example.ktx_ute.activity.ChatActivity;
+import com.example.ktx_ute.interfacee.ITask;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -45,13 +46,25 @@ public class ReceiveMessageService extends FirebaseMessagingService {
         if (Global.isInForeground() && Global.isChatRoomVisible()) {
             Log.e("Lifecycle", "Foreground - In Chat Room");
 
-            String title = "";
-            String body = "";
             switch (type) {
-                case FirebaseUtility.DataMessageType.NEW_MESSAGE:
+                case FirebaseUtility.DataMessageType.NEW_MESSAGE: {
                     Log.e("FirebaseFCM", "Receive Mesage");
                     Global.getService(ChatActivity.class).updateNewMessage();
                     break;
+                }
+                case FirebaseUtility.DataMessageType.STUDENT_LEAVE: {
+                    String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
+                    Global.getService(StudentData.class).updateStudentRoom(new ITask() {
+                        @Override
+                        public void onComplete() {
+                            String body = "Bạn bị xóa khỏi phòng";
+                            Global.getService(StudentData.class).updateRealtimeDatabase();
+                            Global.getInstance().showNotification(title, body);
+                        }
+                    });
+                    Global.getService(ChatActivity.class).exit();
+                    break;
+                }
             }
 
             return;
@@ -63,20 +76,38 @@ public class ReceiveMessageService extends FirebaseMessagingService {
             return;
         }
 
-        String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
-        String body = "";
         switch (type) {
-            case FirebaseUtility.DataMessageType.NEW_MESSAGE:
-                body = "Tin nhắn mới";
+            case FirebaseUtility.DataMessageType.NEW_MESSAGE: {
+                String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
+                String body = "Tin nhắn mới";
+                Global.getInstance().showNotification(title, body);
                 break;
-            default:
-                return;
+            }
+            case FirebaseUtility.DataMessageType.STUDENT_JOIN: {
+                Global.getService(StudentData.class).updateStudentRoom(new ITask() {
+                    @Override
+                    public void onComplete() {
+                        String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
+                        String body = "Bạn được thêm vào phòng";
+                        Global.getService(StudentData.class).updateRealtimeDatabase();
+                        Global.getInstance().showNotification(title, body);
+                    }
+                });
+                break;
+            }
+            case FirebaseUtility.DataMessageType.STUDENT_LEAVE: {
+                String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
+                Global.getService(StudentData.class).updateStudentRoom(new ITask() {
+                    @Override
+                    public void onComplete() {
+                        String body = "Bạn bị xóa khỏi phòng";
+                        Global.getService(StudentData.class).updateRealtimeDatabase();
+                        Global.getInstance().showNotification(title, body);
+                    }
+                });
+                break;
+            }
         }
-
-        Global.getInstance().showNotification(title, body);
-
-
-        Log.e("Lifecycle", "Show notification");
 
 //        if (message.getNotification() != null) {
 //            Log.d("FirebaseMessage", "Message Notification Body: " + message.getNotification().getBody());

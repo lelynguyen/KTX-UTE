@@ -3,6 +3,7 @@ package com.example.ktx_ute.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -10,14 +11,30 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
+import com.example.ktx_ute.FirebaseUtility;
+import com.example.ktx_ute.Global;
 import com.example.ktx_ute.R;
+import com.example.ktx_ute.StudentData;
 import com.example.ktx_ute.apiutils.ApiUtil;
+import com.example.ktx_ute.model.DataMessage;
+import com.example.ktx_ute.model.IFCMService;
 import com.example.ktx_ute.model.Phong;
+import com.example.ktx_ute.model.PushNotification;
 import com.example.ktx_ute.model.SinhVien;
+import com.example.ktx_ute.model.UserToken;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
 
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -109,6 +126,31 @@ public class BqlThemSvActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Toast.makeText(BqlThemSvActivity.this, "Thay đổi thành công!!", Toast.LENGTH_SHORT).show();
+
+                FirebaseUtility.getDatabaseReference().get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (!task.isSuccessful()) {
+                            return;
+                        }
+                        DataSnapshot dataSnapshot = task.getResult();
+
+                        List<String> tokens = new ArrayList<>();
+                        for (DataSnapshot data : dataSnapshot.getChildren()) {
+                            UserToken userToken = data.getValue(UserToken.class);
+                            Log.e("CacheToken", Integer.parseInt(userToken.getRoomNumber()) + " | " + Integer.parseInt(userToken.getUserID()) + " | " + userToken.getToken());
+                            if (userToken.getUserID().equals(sinhVien.getSinhVienID())) {
+                                tokens.add(userToken.getToken());
+//                                FirebaseUtility.getDatabaseReference()
+//                                        .child(userToken.getDeviceID())
+//                                        .setValue(new UserToken(userToken.getUserID(), phong.getSoPhong(), userToken.getToken(), userToken.getDeviceID()));
+                            }
+                        }
+
+                        sendNotification(tokens);
+                    }
+                });
+
             }
 
             @Override
@@ -116,5 +158,12 @@ public class BqlThemSvActivity extends AppCompatActivity {
                 Toast.makeText(BqlThemSvActivity.this, "Lỗi!!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void sendNotification(List<String> tokens) {
+        PushNotification pushNotification = new PushNotification(
+                new DataMessage(FirebaseUtility.DataMessageType.STUDENT_JOIN)
+        );
+        FirebaseUtility.sendNotification(this, tokens, pushNotification);
     }
 }

@@ -51,7 +51,7 @@ public class PhongAdapter extends RecyclerView.Adapter<PhongAdapter.PhongViewHol
 
     @Override
     public void onBindViewHolder(@NonNull PhongViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.btnPhong.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 iOnClick.onClickPhong(phongList.get(position));

@@ -45,6 +45,13 @@ public class SvDangKiPhongActivity extends AppCompatActivity implements IOnClick
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         sinhVien = (SinhVien) getIntent().getSerializableExtra("sinhvien");
 
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                searchView.setIconified(false);
+            }
+        });
+
         callApi();
         searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override

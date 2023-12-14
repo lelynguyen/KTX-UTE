@@ -43,6 +43,13 @@ public class BqlSinhVienActivity extends AppCompatActivity implements IOnClickSi
         ImageView buttonBack = findViewById(R.id.buttonBack);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
+        search_view_bg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                search_view_bg.setIconified(false);
+            }
+        });
+
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

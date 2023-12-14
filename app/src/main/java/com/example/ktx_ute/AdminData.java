@@ -31,10 +31,10 @@ public class AdminData {
 
 
 
-    private LoginActivity loginActivity;
+    private ITask iTask;
 
-    public void initData(String result, LoginActivity loginActivity) {
-        this.loginActivity = loginActivity;
+    public void initData(String result, ITask iTask) {
+        this.iTask = iTask;
         Global.getInstance().makeToast("Thiết lập dữ liệu");
 
         updateAdminVariables(result);
@@ -50,7 +50,7 @@ public class AdminData {
             setUserID(userID);
             setFullname(fullname);
 
-            loginActivity.startIntentAdmin();
+            iTask.onComplete();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

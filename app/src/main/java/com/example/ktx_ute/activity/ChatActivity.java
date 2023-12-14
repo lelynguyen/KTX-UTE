@@ -1,5 +1,6 @@
 package com.example.ktx_ute.activity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -186,6 +187,11 @@ public class ChatActivity extends AppCompatActivity {
         super.onPause();
         Global.stopChatRoom();
 //        handler.removeCallbacks(runnable);
+    }
+
+    public void exit() {
+        Intent intent = new Intent(this, MenuOptionsSvActivity.class);
+        startActivity(intent);
     }
 
     private void findView() {
@@ -539,7 +545,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void sendNotification(String accessToken) {
-        OkHttpClient okHttpClient = FirebaseUtility.getHttpClient();
+        OkHttpClient okHttpClient = FirebaseUtility.getHttpClient(Global.getService(StudentData.class).getTokens().size());
         IFCMService fcmService = FirebaseUtility.getFCMService(okHttpClient);
 
         for (String token : Global.getService(StudentData.class).getTokens()) {

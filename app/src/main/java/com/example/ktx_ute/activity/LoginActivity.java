@@ -16,6 +16,7 @@ import com.example.ktx_ute.AdminData;
 import com.example.ktx_ute.Global;
 import com.example.ktx_ute.R;
 import com.example.ktx_ute.StudentData;
+import com.example.ktx_ute.interfacee.ITask;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -39,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
 
-        checkLogged();
+//        checkLogged();
 
 
         eyeImageView = findViewById(R.id.imageView8);
@@ -142,11 +143,21 @@ public class LoginActivity extends AppCompatActivity {
         switch (userType) {
             case USER_ADMIN:
                 isLoginInProcess = true;
-                Global.getService(AdminData.class).initData(result, LoginActivity.this);
+                Global.getService(AdminData.class).initData(result, new ITask() {
+                    @Override
+                    public void onComplete() {
+                        startIntentAdmin();
+                    }
+                });
                 break;
             case USER_STUDENT:
                 isLoginInProcess = true;
-                Global.getService(StudentData.class).initData(result, LoginActivity.this);
+                Global.getService(StudentData.class).initData(result, new ITask() {
+                    @Override
+                    public void onComplete() {
+                        startIntentSV();
+                    }
+                });
                 break;
         }
     }
@@ -217,7 +228,12 @@ public class LoginActivity extends AppCompatActivity {
             Log.e("HttpResult", result);
             if (!result.equals("[]")) {
                 loginSuccessful(USER_STUDENT, result);
-                Global.getService(StudentData.class).initData(result, LoginActivity.this);
+                Global.getService(StudentData.class).initData(result, new ITask() {
+                    @Override
+                    public void onComplete() {
+                        startIntentSV();
+                    }
+                });
             } else {
                 Global.getInstance().makeToast("Sai thông tin");
                 isLoginInProcess = false;
@@ -284,7 +300,12 @@ public class LoginActivity extends AppCompatActivity {
             Log.e("HttpResult", result);
             if (result.contains("admin")) {
                 loginSuccessful(USER_ADMIN, result);
-                Global.getService(AdminData.class).initData(result, LoginActivity.this);
+                Global.getService(AdminData.class).initData(result, new ITask() {
+                    @Override
+                    public void onComplete() {
+                        startIntentAdmin();
+                    }
+                });
             } else {
                 Global.getInstance().makeToast("Sai thông tin");
                 isLoginInProcess = false;

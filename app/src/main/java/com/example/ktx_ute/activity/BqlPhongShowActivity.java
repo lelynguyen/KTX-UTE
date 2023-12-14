@@ -33,7 +33,11 @@ public class BqlPhongShowActivity extends AppCompatActivity {
         txtSoLuong.setText("Số lượng hiện tại: " + phong.getSoLuongHienTai().toString());
         txtSoLuongToiDa.setText("Số lượng tối đa: " + phong.getSoLuongToiDa().toString());
         txtPhong.setText("Phòng: " + phong.getSoPhong().toString());
-        txtLoaiPhong.setText("Loại phòng: " + phong.getLoaiPhong().toString());
+        if (phong.getLoaiPhong().equals("0")) {
+            txtLoaiPhong.setText("Loại phòng: Nam");
+        } else {
+            txtLoaiPhong.setText("Loại phòng: Nữ");
+        }
 
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
