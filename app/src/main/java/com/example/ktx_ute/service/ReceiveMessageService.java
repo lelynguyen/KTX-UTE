@@ -52,6 +52,31 @@ public class ReceiveMessageService extends FirebaseMessagingService {
                     Global.getService(ChatActivity.class).updateNewMessage();
                     break;
                 }
+                case FirebaseUtility.DataMessageType.CHAT_MEMBER_JOIN: {
+                    String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
+                    String body = "Một sinh viên mới vào phòng";
+                    Global.getInstance().showNotification(title, body);
+                    break;
+                }
+                case FirebaseUtility.DataMessageType.CHAT_MEMBER_LEAVE: {
+                    String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
+                    String body = "Một sinh viên rời phòng";
+                    Global.getInstance().showNotification(title, body);
+                    break;
+                }
+                case FirebaseUtility.DataMessageType.STUDENT_JOIN: {
+                    Global.getService(StudentData.class).updateStudentRoom(new ITask() {
+                        @Override
+                        public void onComplete() {
+                            String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
+                            String body = "Bạn được thêm vào phòng";
+                            Global.getService(StudentData.class).updateRealtimeDatabase();
+                            Global.getInstance().showNotification(title, body);
+                        }
+                    });
+                    Global.getService(ChatActivity.class).exit();
+                    break;
+                }
                 case FirebaseUtility.DataMessageType.STUDENT_LEAVE: {
                     String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
                     Global.getService(StudentData.class).updateStudentRoom(new ITask() {
@@ -70,16 +95,22 @@ public class ReceiveMessageService extends FirebaseMessagingService {
             return;
         }
 
-        boolean isEnable = (boolean) Global.getInstance().getSharedPreferencesValue("Settings", "Notification", true);
-        if (!isEnable) {
-            Log.e("Firebase", "Notification - OFF");
-            return;
-        }
-
         switch (type) {
             case FirebaseUtility.DataMessageType.NEW_MESSAGE: {
                 String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
                 String body = "Tin nhắn mới";
+                Global.getInstance().showNotification(title, body);
+                break;
+            }
+            case FirebaseUtility.DataMessageType.CHAT_MEMBER_JOIN: {
+                String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
+                String body = "Một sinh viên mới vào phòng";
+                Global.getInstance().showNotification(title, body);
+                break;
+            }
+            case FirebaseUtility.DataMessageType.CHAT_MEMBER_LEAVE: {
+                String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
+                String body = "Một sinh viên rời phòng";
                 Global.getInstance().showNotification(title, body);
                 break;
             }

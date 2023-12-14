@@ -37,7 +37,8 @@ public class FirebaseUtility {
         public static final int NEW_MESSAGE = 0;
         public static final int STUDENT_JOIN = 1;
         public static final int STUDENT_LEAVE = 2;
-        public static final int UPDATE_TOKEN = 3;
+        public static final int CHAT_MEMBER_JOIN = 3;
+        public static final int CHAT_MEMBER_LEAVE = 4;
     }
 
     public static final String BASE_URL = "https://fcm.googleapis.com/";

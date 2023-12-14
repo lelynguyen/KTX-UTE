@@ -372,7 +372,12 @@ public class ChatActivity extends AppCompatActivity {
         messageAdapter.notifyItemInserted(chatModels.size() - 1);
 
         insertData(content, dateObject);
-        sendNotification();
+//        sendNotification();
+        FirebaseUtility.sendNotification(
+                ChatActivity.this,
+                Global.getService(StudentData.class).getTokens(),
+                new PushNotification(new DataMessage(FirebaseUtility.DataMessageType.NEW_MESSAGE))
+        );
 
         messageInput.setText("");
         recyclerView.scrollToPosition(chatModels.size() - 1);
@@ -526,54 +531,6 @@ public class ChatActivity extends AppCompatActivity {
                 Log.e("RetrofitFail", t.toString());
             }
         });
-    }
-
-    private void sendNotification() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    InputStream serviceAccount = getAssets().open("service-account.json");
-                    String accessToken = FirebaseUtility.getAccessToken(serviceAccount);
-//                    Log.e("FirebaseAccessToken", accessToken);
-                    sendNotification(accessToken);
-                } catch (Exception ex) {
-                    Log.e("FirebaseError", ex.toString());
-                }
-            }
-        }).start();
-    }
-
-    private void sendNotification(String accessToken) {
-        OkHttpClient okHttpClient = FirebaseUtility.getHttpClient(Global.getService(StudentData.class).getTokens().size());
-        IFCMService fcmService = FirebaseUtility.getFCMService(okHttpClient);
-
-        for (String token : Global.getService(StudentData.class).getTokens()) {
-            if (token.isEmpty()) {
-                continue;
-            }
-            PushNotificationWrapper message = new PushNotificationWrapper(
-                    new PushNotification(token, new DataMessage(FirebaseUtility.DataMessageType.NEW_MESSAGE))
-            );
-            fcmService.sendNotification(
-                    "Bearer " + accessToken,
-                    message
-            ).enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    if (response.isSuccessful()) {
-                        Log.e("FirebaseResponse", "OK");
-                    } else {
-                        Log.e("FirebaseResponse", response.body().toString());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.e("FirebaseError", t.getMessage());
-                }
-            });
-        }
     }
 
     private String encodeMessage(String message) {

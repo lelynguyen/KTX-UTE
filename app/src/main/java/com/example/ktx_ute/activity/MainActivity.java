@@ -26,9 +26,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkLogged() {
-//        if (Global.IsLogged()) {
-//            return;
-//        }
+        if (Global.IsLogged()) {
+            return;
+        }
         SharedPreferences sharedPreferences = getSharedPreferences("Login", MODE_PRIVATE);
         boolean isLogged = sharedPreferences.getBoolean("isLogged", false);
         if (!isLogged) {

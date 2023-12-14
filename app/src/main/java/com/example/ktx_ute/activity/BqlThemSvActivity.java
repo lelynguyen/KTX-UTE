@@ -121,6 +121,8 @@ public class BqlThemSvActivity extends AppCompatActivity {
         });
     }
 
+    private List<String> updateUserTokens = new ArrayList<>();
+    private List<String> roomUserTokens = new ArrayList<>();
     private void callApi() {
         ApiUtil.apiutil.dangkyphong(sinhVien.getSinhVienID(), phong.getPhongID()).enqueue(new Callback<Void>() {
             @Override
@@ -135,19 +137,21 @@ public class BqlThemSvActivity extends AppCompatActivity {
                         }
                         DataSnapshot dataSnapshot = task.getResult();
 
-                        List<String> tokens = new ArrayList<>();
+                        updateUserTokens.clear();
+                        roomUserTokens.clear();
                         for (DataSnapshot data : dataSnapshot.getChildren()) {
                             UserToken userToken = data.getValue(UserToken.class);
                             Log.e("CacheToken", Integer.parseInt(userToken.getRoomNumber()) + " | " + Integer.parseInt(userToken.getUserID()) + " | " + userToken.getToken());
                             if (userToken.getUserID().equals(sinhVien.getSinhVienID())) {
-                                tokens.add(userToken.getToken());
-//                                FirebaseUtility.getDatabaseReference()
-//                                        .child(userToken.getDeviceID())
-//                                        .setValue(new UserToken(userToken.getUserID(), phong.getSoPhong(), userToken.getToken(), userToken.getDeviceID()));
+                                updateUserTokens.add(userToken.getToken());
+                                continue;
+                            }
+                            if (userToken.getRoomNumber().equals(phong.getSoPhong())) {
+                                roomUserTokens.add(userToken.getToken());
                             }
                         }
 
-                        sendNotification(tokens);
+                        sendNotification();
                     }
                 });
 
@@ -160,10 +164,19 @@ public class BqlThemSvActivity extends AppCompatActivity {
         });
     }
 
-    private void sendNotification(List<String> tokens) {
-        PushNotification pushNotification = new PushNotification(
-                new DataMessage(FirebaseUtility.DataMessageType.STUDENT_JOIN)
-        );
-        FirebaseUtility.sendNotification(this, tokens, pushNotification);
+    private void sendNotification() {
+        if (updateUserTokens.size() != 0) {
+            PushNotification pushNotification = new PushNotification(
+                    new DataMessage(FirebaseUtility.DataMessageType.STUDENT_JOIN)
+            );
+            FirebaseUtility.sendNotification(this, updateUserTokens, pushNotification);
+        }
+
+        if (roomUserTokens.size() != 0) {
+            PushNotification pushNotification = new PushNotification(
+                    new DataMessage(FirebaseUtility.DataMessageType.CHAT_MEMBER_JOIN)
+            );
+            FirebaseUtility.sendNotification(this, roomUserTokens, pushNotification);
+        }
     }
 }

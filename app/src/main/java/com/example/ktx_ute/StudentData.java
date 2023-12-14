@@ -102,48 +102,25 @@ public class StudentData {
 
 
     private ValueEventListener tokenListener;
-    private boolean isFirstRun = true;
-    private List<String> userIDList = new ArrayList<>();
     public void addTokenListener() {
-        isFirstRun = true;
         if (tokenListener == null) {
             tokenListener = new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (!HasRoom()) return;
 
-                    int oldSize = userIDList.size();
                     tokens.clear();
-                    userIDList.clear();
-
                     String deviceID = Global.getInstance().getDeviceID();
                     for (DataSnapshot data : snapshot.getChildren()) {
                         UserToken userToken = data.getValue(UserToken.class);
                         Log.e("CacheToken", Integer.parseInt(userToken.getRoomNumber()) + " | " + Integer.parseInt(userToken.getUserID()) + " | " + userToken.getToken());
 
-                        if (userIDList.contains(userToken.getUserID())) {
-                            userIDList.add(userToken.getUserID());
-                        }
                         if (Integer.parseInt(userToken.getRoomNumber()) == roomNumber && !userToken.getDeviceID().equals(deviceID)) {
                             String token = userToken.getToken();
                             tokens.add(userToken.getToken());
                         }
                     }
                     Log.e("CacheToken", tokens.size() + "");
-                    if (isFirstRun) {
-                        isFirstRun = true;
-                        return;
-                    }
-                    int newSize = userIDList.size();
-                    if (newSize < oldSize) {
-                        String title = "Phòng " + roomNumber;
-                        String body = "Một sinh viên rời phòng";
-                        Global.getInstance().showNotification(title, body);
-                    } else if (newSize > oldSize) {
-                        String title = "Phòng " + roomNumber;
-                        String body = "Một sinh viên mới vào phòng";
-                        Global.getInstance().showNotification(title, body);
-                    }
                 }
 
                 @Override

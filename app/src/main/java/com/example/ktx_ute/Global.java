@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.core.app.NotificationCompat;
@@ -41,6 +42,11 @@ public class Global extends Application implements LifecycleObserver {
     }
 
     public void showNotification(String title, String body) {
+        boolean isEnable = (boolean) getSharedPreferencesValue("Settings", "Notification", true);
+        if (!isEnable) {
+            Log.e("Notification", "Notification - OFF");
+            return;
+        }
         Intent intent = new Intent(this, LoginActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
