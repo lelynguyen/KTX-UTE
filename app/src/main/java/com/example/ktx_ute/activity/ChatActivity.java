@@ -77,7 +77,7 @@ interface IChatRoomService {
 
     @FormUrlEncoded
     @POST("insert_tinnhan.php")
-    Call<String> insertMessage(
+    Call<List<ResponseMessage>> insertMessage(
             @Field("sinhVienID") String studentID,
             @Field("phongID") String roomID,
             @Field("noiDung") String content,
@@ -163,7 +163,6 @@ public class ChatActivity extends AppCompatActivity {
         username = Global.getService(StudentData.class).getFullname();
         roomID = Global.getService(StudentData.class).getRoomID();
         roomNumber = Global.getService(StudentData.class).getRoomNumber();
-        Global.getService(StudentData.class).generateTokenList();
 
         findView();
         setViewAction();
@@ -388,7 +387,8 @@ public class ChatActivity extends AppCompatActivity {
                 Collections.sort(responseMessages, new Comparator<ResponseMessage>() {
                     @Override
                     public int compare(ResponseMessage message1, ResponseMessage message2) {
-                        return message1.getTinNhanID().compareToIgnoreCase(message2.getTinNhanID());
+//                        return message1.getTinNhanID().compareToIgnoreCase(message2.getTinNhanID());
+                        return Integer.valueOf(message1.getTinNhanID()).compareTo(Integer.valueOf(message2.getTinNhanID()));
                     }
                 });
 
@@ -396,10 +396,10 @@ public class ChatActivity extends AppCompatActivity {
                     return;
                 }
 
-                for (int i = chatModels.size() - 1; i > lastUpdateChatModelIndex; i--) {
-                    chatModels.remove(i);
-                    messageAdapter.notifyItemRemoved(i);
-                }
+//                for (int i = chatModels.size() - 1; i > lastUpdateChatModelIndex; i--) {
+//                    chatModels.remove(i);
+//                    messageAdapter.notifyItemRemoved(i);
+//                }
 
                 try {
                     addResultToChatModels(responseMessages);
@@ -422,13 +422,10 @@ public class ChatActivity extends AppCompatActivity {
         String time = null, date = null, datetime = null;
         Date dateObject;
 
-        String line = "";
-
-        int startIndex = responseMessages.size();
+        int startIndex = chatModels.size();
 
         for (int i = 0; i < responseMessages.size(); i++) {
             ResponseMessage responseMessage = responseMessages.get(i);
-            line += responseMessage.getTinNhanID() + " ";
 
             studentID = Integer.parseInt(responseMessage.getSinhVienID());
             studentName = getStudentName(studentID);
@@ -451,10 +448,9 @@ public class ChatActivity extends AppCompatActivity {
 //            addMessageModel(message);
             chatModels.add(message);
         }
-        Log.e("Chat", line);
 
 //        messageAdapter.notifyDataSetChanged();
-        messageAdapter.notifyItemRangeInserted(startIndex, chatModels.size());
+        messageAdapter.notifyItemRangeInserted(startIndex, responseMessages.size());
 
         recyclerView.scrollToPosition(chatModels.size() - 1);
         lastUpdateChatModelIndex = chatModels.size() - 1;
@@ -512,14 +508,15 @@ public class ChatActivity extends AppCompatActivity {
                 String.valueOf(roomID),
                 encodeMessage(content),
                 sdf.format(date)
-        ).enqueue(new Callback<String>() {
+        ).enqueue(new Callback<List<ResponseMessage>>() {
             @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                Log.e("RetrofitResponse", response.body().toString());
+            public void onResponse(Call<List<ResponseMessage>> call, Response<List<ResponseMessage>> response) {
+                Log.e("RetrofitResponse", response.body().get(0).getTinNhanID());
+                lastUpdateMessageID = Integer.parseInt(response.body().get(0).getTinNhanID());
             }
 
             @Override
-            public void onFailure(Call<String> call, Throwable t) {
+            public void onFailure(Call<List<ResponseMessage>> call, Throwable t) {
                 Log.e("RetrofitFail", t.toString());
             }
         });

@@ -125,7 +125,7 @@ public class SvDangKiPhongShowActivity extends AppCompatActivity {
         ApiUtil.apiutil.dangkyphong(sinhVien.getSinhVienID(), phong.getPhongID()).enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
-                callUpdateToken();
+                updateToken();
                 Toast.makeText(SvDangKiPhongShowActivity.this, "Đăng ký thành công!!", Toast.LENGTH_SHORT).show();
             }
 
@@ -136,26 +136,8 @@ public class SvDangKiPhongShowActivity extends AppCompatActivity {
         });
     }
 
-    private void callUpdateToken() {
-        Global.getService(StudentData.class).updateStudentRoom(
-                phong.getPhongID(),
-                phong.getSoPhong()
-        );
-
-        if (Global.getService(StudentData.class).HasRoom()) {
-            PushNotification leaveNotification = new PushNotification(
-                    new DataMessage(FirebaseUtility.DataMessageType.STUDENT_LEAVE)
-            );
-            FirebaseUtility.callUpdateMessage(
-                    SvDangKiPhongShowActivity.this,
-                    String.valueOf(Global.getService(StudentData.class).getRoomNumber()),
-                    leaveNotification);
-        }
-
-        PushNotification joinNotification = new PushNotification(
-                new DataMessage(FirebaseUtility.DataMessageType.STUDENT_JOIN)
-        );
-        FirebaseUtility.callUpdateMessage(SvDangKiPhongShowActivity.this, phong.getSoPhong(), joinNotification);
+    private void updateToken() {
+        Global.getService(StudentData.class).updateStudentRoom(phong.getPhongID(), phong.getSoPhong());
     }
 
     @Override

@@ -28,9 +28,6 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Map;
 
 public class ReceiveMessageService extends FirebaseMessagingService {
-    private final String SHARED_PREFS = "Settings";
-    private final String SETTING_NOTIFICATION = "Notification";
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -55,52 +52,28 @@ public class ReceiveMessageService extends FirebaseMessagingService {
                     Log.e("FirebaseFCM", "Receive Mesage");
                     Global.getService(ChatActivity.class).updateNewMessage();
                     break;
-                case FirebaseUtility.DataMessageType.STUDENT_JOIN:
-                    Global.getService(StudentData.class).generateTokenList();
-                    title = "Phòng " + Global.getService(StudentData.class).getRoomNumber();
-                    body = "Một Sinh viên mới vào phòng";
-                    showNotification(title, body);
-                    break;
-                case FirebaseUtility.DataMessageType.STUDENT_LEAVE:
-                    Global.getService(StudentData.class).generateTokenList();
-                    title = "Phòng " + Global.getService(StudentData.class).getRoomNumber();
-                    body = "Một sinh viên rời phòng";
-                    showNotification(title, body);
-                    break;
-//                case FirebaseUtility.DataMessageType.UPDATE_TOKEN:
-//                    Global.getService(StudentData.class).generateTokenList();
-//                    break;
             }
 
             return;
         }
 
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        boolean isEnable = sharedPreferences.getBoolean(SETTING_NOTIFICATION, true);
+        boolean isEnable = (boolean) Global.getInstance().getSharedPreferencesValue("Settings", "Notification", true);
         if (!isEnable) {
             Log.e("Firebase", "Notification - OFF");
             return;
         }
 
-        String title = "Phòng " + Global.getService(StudentData.class).getRoomNumber();
+        String title = "Phòng " + Global.getInstance().getSharedPreferencesValue("Student", "roomNumber", "0");
         String body = "";
         switch (type) {
             case FirebaseUtility.DataMessageType.NEW_MESSAGE:
                 body = "Tin nhắn mới";
                 break;
-            case FirebaseUtility.DataMessageType.STUDENT_JOIN:
-                body = "Một Sinh viên mới vào phòng";
-//                Global.getService(StudentData.class).generateTokenList();
-                break;
-            case FirebaseUtility.DataMessageType.STUDENT_LEAVE:
-                body = "Một sinh viên rời phòng";
-//                Global.getService(StudentData.class).generateTokenList();
-                break;
             default:
                 return;
         }
 
-        showNotification(title, body);
+        Global.getInstance().showNotification(title, body);
 
 
         Log.e("Lifecycle", "Show notification");
@@ -109,36 +82,6 @@ public class ReceiveMessageService extends FirebaseMessagingService {
 //            Log.d("FirebaseMessage", "Message Notification Body: " + message.getNotification().getBody());
 //            makeToast(message.getFrom(), message.getNotification().getBody());
 //        }
-    }
-
-    private void showNotification(String title, String body) {
-        Intent intent = new Intent(this, ChatActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
-
-        String channelId = "fcm_default_channel";
-        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder =
-                new NotificationCompat.Builder(this, channelId)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(title)
-                        .setContentText(body)
-                        .setAutoCancel(true)
-                        .setSound(defaultSoundUri)
-                        .setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // Since android Oreo notification channel is needed.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId,
-                    "Channel human readable title",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            notificationManager.createNotificationChannel(channel);
-        }
-
-        notificationManager.notify(0, notificationBuilder.build());
     }
 
 }

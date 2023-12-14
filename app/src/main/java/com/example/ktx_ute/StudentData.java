@@ -1,5 +1,6 @@
 package com.example.ktx_ute;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -80,6 +81,7 @@ public class StudentData {
     public void setRoom(String roomID, String roomNumber) {
         this.roomID = Integer.parseInt(roomID);
         this.roomNumber = Integer.parseInt(roomNumber);
+        Global.getInstance().saveSharedPreferencesValue("Student", "roomNumber", roomNumber);
     }
 
     public int getRoomID() {
@@ -98,48 +100,85 @@ public class StudentData {
         this.roomNumber = roomNumber;
     }
 
-    public void cacheStudentTokens() {
-        if (tokens.size() == 0) {
-            generateTokenList();
+
+
+    private ValueEventListener tokenListener;
+    private boolean isFirstRun = true;
+    public void addTokenListener() {
+        isFirstRun = true;
+        if (tokenListener == null) {
+            tokenListener = new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    int oldSize = tokens.size();
+                    tokens.clear();
+                    Log.e("RealtimeDatabase", "Trigger");
+                    for (DataSnapshot data : snapshot.getChildren()) {
+                        UserToken userToken = data.getValue(UserToken.class);
+                        Log.e("CacheToken", Integer.parseInt(userToken.getRoomNumber()) + " | " + Integer.parseInt(userToken.getUserID()) + " | " + userToken.getToken());
+                        if (Integer.parseInt(userToken.getRoomNumber()) == roomNumber && Integer.parseInt(userToken.getUserID()) != userID) {
+                            String token = userToken.getToken();
+                            tokens.add(userToken.getToken());
+                        }
+                    }
+                    Log.e("CacheToken", tokens.size() + "");
+                    if (isFirstRun) {
+                        isFirstRun = true;
+                        return;
+                    }
+                    int newSize = tokens.size();
+                    if (newSize < oldSize) {
+                        String title = "Phòng " + roomNumber;
+                        String body = "Một sinh viên rời phòng";
+                        Global.getInstance().showNotification(title, body);
+                    } else if (newSize > oldSize) {
+                        String title = "Phòng " + roomNumber;
+                        String body = "Một sinh viên mới vào phòng";
+                        Global.getInstance().showNotification(title, body);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            };
+        }
+        FirebaseUtility.getDatabaseReference().addValueEventListener(tokenListener);
+    }
+
+    public void removeTokenListener() {
+        if (tokenListener != null) {
+            FirebaseUtility.getDatabaseReference().removeEventListener(tokenListener);
         }
     }
 
-    public void generateTokenList() {
-        tokens.clear();
-//        Log.e("CacheToken", "mine " + roomNumber + " | " + userID);
-        FirebaseUtility.getDatabaseReference().addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    UserToken userToken = data.getValue(UserToken.class);
-                    if (Integer.parseInt(userToken.getRoomNumber()) == roomNumber && Integer.parseInt(userToken.getUserID()) != userID) {
-                        String token = userToken.getToken();
-//                        Log.e("CacheToken", Integer.parseInt(userToken.getRoomNumber()) + " | " + Integer.parseInt(userToken.getUserID()) + " | " + userToken.getToken());
-                        tokens.add(userToken.getToken());
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-        Log.e("CacheToken", tokens.size() + "");
-    }
+//    private void generateTokenList() {
+//        FirebaseUtility.getDatabaseReference().addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
 
     public List<String> getTokens() {
         return tokens;
     }
 
-
     // Init after login
     private LoginActivity loginActivity;
 
     public void removeToken() {
+        removeTokenListener();
         FirebaseUtility.getDatabaseReference()
                 .child(String.valueOf(userID))
-                .setValue(new UserToken(String.valueOf(userID), String.valueOf(roomID), ""));
+                .setValue(new UserToken(String.valueOf(userID), String.valueOf(roomNumber), ""));
     }
 
     public void initData(String result, LoginActivity loginActivity) {
@@ -226,7 +265,7 @@ public class StudentData {
 
     public void updateUserToken(ITask completedTask) {
         Log.e("Login", "updateUserToken");
-        generateTokenList();
+        addTokenListener();
         FirebaseMessaging.getInstance().getToken()
             .addOnCompleteListener(new OnCompleteListener<String>() {
                 @Override

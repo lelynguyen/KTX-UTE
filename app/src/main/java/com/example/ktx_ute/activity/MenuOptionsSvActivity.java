@@ -48,7 +48,7 @@ public class MenuOptionsSvActivity extends AppCompatActivity {
                 editor.putBoolean("isLogged", false);
                 editor.apply();
                 Global.setLoginStatus(false);
-//                Global.getService(StudentData.class).removeToken();
+                Global.getService(StudentData.class).removeToken();
 
                 Intent intent = new Intent(MenuOptionsSvActivity.this, LoginActivity.class);
                 startActivity(intent);

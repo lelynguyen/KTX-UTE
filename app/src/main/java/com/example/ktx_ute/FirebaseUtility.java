@@ -81,74 +81,74 @@ public class FirebaseUtility {
         return databaseReference;
     }
 
-    public static void callUpdateMessage(Context context, String roomNumber, PushNotification pushNotification) {
-        List<String> tokens = new ArrayList<>();
-        getDatabaseReference().addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    UserToken userToken = data.getValue(UserToken.class);
-                    if (userToken.getRoomNumber().equals(roomNumber)) {
-                        String token = userToken.getToken();
-                        if (!token.isEmpty()) {
-                            tokens.add(token);
-                            sendNotification(context, tokens, pushNotification);
-                        }
-                    }
-                }
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
-    private static void sendNotification(Context context, List<String> tokens, PushNotification pushNotification) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    InputStream serviceAccount = context.getAssets().open("service-account.json");
-                    String accessToken = FirebaseUtility.getAccessToken(serviceAccount);
-//                    Log.e("FirebaseAccessToken", accessToken);
-                    sendNotification(accessToken, tokens, pushNotification);
-                } catch (Exception ex) {
-                    Log.e("FirebaseError", ex.toString());
-                }
-            }
-        }).start();
-    }
-
-    private static void sendNotification(String accessToken, List<String> tokens, PushNotification pushNotification) {
-        OkHttpClient okHttpClient = FirebaseUtility.getHttpClient();
-        IFCMService fcmService = FirebaseUtility.getFCMService(okHttpClient);
-
-        for (String token : tokens) {
-            if (token.isEmpty()) {
-                continue;
-            }
-            PushNotificationWrapper message = new PushNotificationWrapper(pushNotification);
-            fcmService.sendNotification(
-                    "Bearer " + accessToken,
-                    message
-            ).enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                    if (response.isSuccessful()) {
-                        Log.e("FirebaseResponse", "OK");
-                    } else {
-                        Log.e("FirebaseResponse", response.body().toString());
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.e("FirebaseError", t.getMessage());
-                }
-            });
-        }
-    }
+//    public static void callUpdateMessage(Context context, String roomNumber, PushNotification pushNotification) {
+//        List<String> tokens = new ArrayList<>();
+//        getDatabaseReference().addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot snapshot) {
+//                for (DataSnapshot data : snapshot.getChildren()) {
+//                    UserToken userToken = data.getValue(UserToken.class);
+//                    if (userToken.getRoomNumber().equals(roomNumber)) {
+//                        String token = userToken.getToken();
+//                        if (!token.isEmpty()) {
+//                            tokens.add(token);
+//                            sendNotification(context, tokens, pushNotification);
+//                        }
+//                    }
+//                }
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError error) {
+//
+//            }
+//        });
+//    }
+//
+//    private static void sendNotification(Context context, List<String> tokens, PushNotification pushNotification) {
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                try {
+//                    InputStream serviceAccount = context.getAssets().open("service-account.json");
+//                    String accessToken = FirebaseUtility.getAccessToken(serviceAccount);
+////                    Log.e("FirebaseAccessToken", accessToken);
+//                    sendNotification(accessToken, tokens, pushNotification);
+//                } catch (Exception ex) {
+//                    Log.e("FirebaseError", ex.toString());
+//                }
+//            }
+//        }).start();
+//    }
+//
+//    private static void sendNotification(String accessToken, List<String> tokens, PushNotification pushNotification) {
+//        OkHttpClient okHttpClient = FirebaseUtility.getHttpClient();
+//        IFCMService fcmService = FirebaseUtility.getFCMService(okHttpClient);
+//
+//        for (String token : tokens) {
+//            if (token.isEmpty()) {
+//                continue;
+//            }
+//            PushNotificationWrapper message = new PushNotificationWrapper(pushNotification);
+//            fcmService.sendNotification(
+//                    "Bearer " + accessToken,
+//                    message
+//            ).enqueue(new Callback<ResponseBody>() {
+//                @Override
+//                public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+//                    if (response.isSuccessful()) {
+//                        Log.e("FirebaseResponse", "OK");
+//                    } else {
+//                        Log.e("FirebaseResponse", response.body().toString());
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<ResponseBody> call, Throwable t) {
+//                    Log.e("FirebaseError", t.getMessage());
+//                }
+//            });
+//        }
+//    }
 }
