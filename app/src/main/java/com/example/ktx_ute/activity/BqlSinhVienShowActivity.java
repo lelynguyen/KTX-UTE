@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +37,7 @@ public class BqlSinhVienShowActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton btnSearch = findViewById(R.id.btnSearch);
+        LinearLayout btnSearch = findViewById(R.id.btnSearch);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override

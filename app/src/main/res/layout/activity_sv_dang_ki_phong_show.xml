@@ -54,36 +54,33 @@
 
             </LinearLayout>
 
-
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_10pxh"
-                android:layout_marginTop="@dimen/_16pxv"
+                android:id="@+id/btnSearch"
                 android:gravity="end"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16pxv"
+                android:layout_width="match_parent"
                 android:orientation="horizontal">
 
-
                 <LinearLayout
-                    style="@style/groupStylebluegray_800cornerRadius"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_weight="0.14"
                     android:gravity="center_horizontal"
-                    android:orientation="vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.14"
+                    android:layout_width="0dp"
+                    android:orientation="vertical"
+                    style="@style/groupStylebluegray_800cornerRadius">
 
                     <ImageButton
-                        android:id="@+id/btnSearch"
-                        android:layout_width="@dimen/_30pxh"
-                        android:layout_height="40dp"
-                        android:layout_gravity="center_horizontal"
                         android:background="@drawable/rectangle_bg_bluegray_800_radius_7_35"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_height="40dp"
+                        android:layout_width="@dimen/_30pxh"
                         android:paddingHorizontal="@dimen/_3pxh"
                         android:paddingVertical="@dimen/_3pxv"
                         android:scaleType="centerCrop"
                         android:src="@drawable/outline_home_24"
-                        tools:ignore="ContentDescription" />
+                        tools:ignore="ContentDescription"/>
 
                 </LinearLayout>
 

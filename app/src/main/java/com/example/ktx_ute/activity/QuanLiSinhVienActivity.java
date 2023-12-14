@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,7 +34,7 @@ public class QuanLiSinhVienActivity extends AppCompatActivity implements IOnClic
     Phong phong;
 
     TextView txthoso, txtphong;
-    ImageButton imageButton;
+    LinearLayout imageButton;
 
 
     @Override

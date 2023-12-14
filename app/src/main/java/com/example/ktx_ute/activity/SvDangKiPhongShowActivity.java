@@ -73,7 +73,7 @@ public class SvDangKiPhongShowActivity extends AppCompatActivity {
             }
         });
 
-        ImageButton btnSearch = findViewById(R.id.btnSearch);
+        LinearLayout btnSearch = findViewById(R.id.btnSearch);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override

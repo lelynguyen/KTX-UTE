@@ -117,6 +117,7 @@ public class BqlThemSvActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Ẩn LinearLayout frame_xac_nhan khi người dùng nhấn nút btn_huy
                 frameXacNhan.setVisibility(View.GONE);
+                btnXacNhan.setVisibility(View.VISIBLE);
             }
         });
     }

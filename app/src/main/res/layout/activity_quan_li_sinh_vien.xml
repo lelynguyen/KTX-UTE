@@ -56,24 +56,34 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_gravity="center_vertical"
-                android:gravity="center_horizontal"
+                android:id="@+id/btnSearch"
+                android:gravity="end"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_16pxv"
                 android:layout_width="match_parent"
-                android:orientation="vertical"
-                style="@style/groupStylebluegray_800cornerRadius">
+                android:orientation="horizontal">
 
-                <ImageButton
-                    android:background="@drawable/rectangle_bg_bluegray_800_radius_7_35"
-                    android:id="@+id/btnSearch"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_height="40dp"
-                    android:layout_width="@dimen/_30pxh"
-                    android:paddingHorizontal="@dimen/_3pxh"
-                    android:paddingVertical="@dimen/_3pxv"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/outline_home_24"
-                    tools:ignore="ContentDescription"/>
+                <LinearLayout
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.14"
+                    android:layout_width="0dp"
+                    android:orientation="vertical"
+                    style="@style/groupStylebluegray_800cornerRadius">
+
+                    <ImageButton
+                        android:background="@drawable/rectangle_bg_bluegray_800_radius_7_35"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_height="40dp"
+                        android:layout_width="@dimen/_30pxh"
+                        android:paddingHorizontal="@dimen/_3pxh"
+                        android:paddingVertical="@dimen/_3pxv"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/outline_home_24"
+                        tools:ignore="ContentDescription"/>
+
+                </LinearLayout>
 
             </LinearLayout>
 
