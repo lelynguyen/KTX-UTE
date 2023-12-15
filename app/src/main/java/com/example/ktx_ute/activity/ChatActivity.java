@@ -157,7 +157,7 @@ public class ChatActivity extends AppCompatActivity {
 
         updateRoomName();
 
-        Global.getInstance().makeToast("Đang tải");
+//        Global.getInstance().makeToast("Đang tải");
         cacheStudentNames(new ITask() {
             @Override
             public void onComplete() {
