@@ -25,6 +25,11 @@ public class MainActivity extends AppCompatActivity {
         checkLogged();
     }
 
+    @Override
+    public void onBackPressed() {
+//        super.onBackPressed();
+    }
+
     private void checkLogged() {
         if (Global.IsLogged()) {
             return;
@@ -40,20 +45,35 @@ public class MainActivity extends AppCompatActivity {
         int userType = sharedPreferences.getInt("type", -1);
         switch (userType) {
             case USER_ADMIN:
-                Global.getService(AdminData.class).initData(result, new ITask() {
-                    @Override
-                    public void onComplete() {
-                        startIntentAdmin();
-                    }
-                });
+                Global.getService(AdminData.class).initData(
+                        result,
+                        new ITask() {
+                            @Override
+                            public void onComplete() {
+                                startIntentAdmin();
+                            }
+                        },
+                        new ITask() {
+                            @Override
+                            public void onComplete() {
+                                loginFailed();
+                            }
+                        });
                 break;
             case USER_STUDENT:
-                Global.getService(StudentData.class).initData(result, new ITask() {
-                    @Override
-                    public void onComplete() {
-                        startIntentSV();
-                    }
-                });
+                Global.getService(StudentData.class).initData(
+                        result,
+                        new ITask() {
+                            @Override
+                            public void onComplete() {
+                                startIntentSV();
+                            }
+                        }, new ITask() {
+                            @Override
+                            public void onComplete() {
+                                loginFailed();
+                            }
+                        });
                 break;
         }
     }
@@ -64,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
                 startActivity(loginIntent);
+                finish();
             }
         }, 2000);
     }
@@ -73,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
         Global.setLoginStatus(true);
         Intent intent = new Intent(MainActivity.this, MenuOptionsSvActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void startIntentAdmin() {
@@ -80,5 +102,14 @@ public class MainActivity extends AppCompatActivity {
         Global.setLoginStatus(true);
         Intent intent = new Intent(MainActivity.this, MenuOptionsBqlActivity.class);
         startActivity(intent);
+        finish();
+    }
+
+    private void loginFailed() {
+        Global.getInstance().makeToast("Lỗi");
+        Global.getInstance().saveSharedPreferencesValue("Login", "isLogged", false);
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

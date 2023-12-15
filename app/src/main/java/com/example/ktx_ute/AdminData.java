@@ -31,10 +31,12 @@ public class AdminData {
 
 
 
-    private ITask iTask;
+    private ITask iSuccessedTask;
+    private ITask iFailedTask;
 
-    public void initData(String result, ITask iTask) {
-        this.iTask = iTask;
+    public void initData(String result, ITask iSuccessedTask, ITask iFailedTask) {
+        this.iSuccessedTask = iSuccessedTask;
+        this.iFailedTask = iFailedTask;
         Global.getInstance().makeToast("Thiết lập dữ liệu");
 
         updateAdminVariables(result);
@@ -50,8 +52,9 @@ public class AdminData {
             setUserID(userID);
             setFullname(fullname);
 
-            iTask.onComplete();
+            iSuccessedTask.onComplete();
         } catch (Exception ex) {
+            iFailedTask.onComplete();
             ex.printStackTrace();
         }
     }

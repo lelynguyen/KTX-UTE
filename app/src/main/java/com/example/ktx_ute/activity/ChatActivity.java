@@ -25,6 +25,7 @@ import com.example.ktx_ute.R;
 import com.example.ktx_ute.RetrofitUtility;
 import com.example.ktx_ute.StudentData;
 import com.example.ktx_ute.adapter.MessageAdapter;
+import com.example.ktx_ute.interfacee.ITask;
 import com.example.ktx_ute.model.ChatModel;
 import com.example.ktx_ute.model.DataMessage;
 import com.example.ktx_ute.model.DateModel;
@@ -90,22 +91,6 @@ public class ChatActivity extends AppCompatActivity {
     private final String SHARED_PREFS = "Settings";
     private final String SETTING_NOTIFICATION = "Notification";
 
-//    private final String SERVICE_URL = "https://spaceofme.000webhostapp.com/api_ktx";
-//    private final String GET_ALL_URL = SERVICE_URL + "/get_tinnhan.php?phongID=%d";
-//    private final String GET_NEW_URL = SERVICE_URL + "/get_tinnhanmoi.php?phongID=%d&lastUpdateID=%d";
-//    private final String INSERT_URL = SERVICE_URL + "/insert_tinnhan.php";
-//    private final String GET_ROOM_URL = SERVICE_URL + "/get_phong.php?soPhong=%d";
-//    private final String GET_STUDENT_URL = SERVICE_URL + "/get_sinhvientrongphong.php?phongID=%d";
-
-//    private final String GET_NEW_URL = "http://192.168.1.39/webservices/tinnhan/get_tinnhanmoi.php?phongID=%d&lastUpdateID=%d";
-//    private final String INSERT_URL = "http://192.168.1.39/webservices/tinnhan/insert_tinnhan2.php";
-
-//    private final String SERVICE_URL = "http://192.168.1.39:45455/api";
-//    private final String GET_ALL_URL = SERVICE_URL + "/Message/Get?roomId=%d";
-//    private final String GET_NEW_URL = SERVICE_URL + "/Message/GetNew?roomId=%d&lastUpdateId=%d";
-//    private final String INSERT_URL = SERVICE_URL + "/Message/Create";
-//    private final String GET_ROOM_URL = SERVICE_URL + "/Room/Get/%d";
-
     private final String MESSAGE_ID_COLUMN = "tinNhanID";
     private final String STUDENT_ID_COLUMN = "sinhVienID";
     private final String STUDENT_NAME_COLUMN = "hoTenSV";
@@ -170,9 +155,15 @@ public class ChatActivity extends AppCompatActivity {
         bindRecycleView();
         updateNotificationDisplay();
 
-        cacheStudentNames();
         updateRoomName();
-        updateNewMessage();
+
+        Global.getInstance().makeToast("Đang tải");
+        cacheStudentNames(new ITask() {
+            @Override
+            public void onComplete() {
+                updateNewMessage();
+            }
+        });
     }
 
     @Override
@@ -192,6 +183,7 @@ public class ChatActivity extends AppCompatActivity {
     public void exit() {
         Intent intent = new Intent(this, MenuOptionsSvActivity.class);
         startActivity(intent);
+        finish();
     }
 
     private void findView() {
@@ -266,27 +258,7 @@ public class ChatActivity extends AppCompatActivity {
         }
     }
 
-    private void cacheUserTokens() {
-        tokens = new ArrayList<>();
-        FirebaseUtility.getDatabaseReference().child(String.valueOf(userID)).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    String token = data.getValue(UserToken.class).getToken();
-                    tokens.add(token);
-                    Log.e("FirebaseDatabase", token);
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-//        tokens.add("exnbVWzSRqGIyYa-6ID6z8:APA91bHGG39XoYljhkylR3yc51FvrVEDCeWTRzEE4jrr52Y_ZdcyiSRLVt6dZsGHPDgQObICNMxZJQlQ-wyBpknsAfGPUE8n6vI-VXMW_EITCW8ikqbivJZTYpFuPjJFZ7fHJBqp2xP4");
-    }
-
-    private void cacheStudentNames() {
+    private void cacheStudentNames(ITask task) {
         IChatRoomService chatRoomService = RetrofitUtility.getService(IChatRoomService.class);
         chatRoomService.getStudent(roomID).enqueue(new Callback<String>() {
             @Override
@@ -305,14 +277,21 @@ public class ChatActivity extends AppCompatActivity {
 
                         studentNames.put(id, name);
                     }
+
+                    if (task != null) {
+                        task.onComplete();
+                    }
                 } catch (Exception ex) {
                     Log.e("RetrofitException", ex.toString());
+                    Global.getInstance().makeToast("Lỗi");
+                    exit();
                 }
             }
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-
+                Global.getInstance().makeToast("Lỗi");
+                exit();
             }
         });
     }
@@ -367,12 +346,10 @@ public class ChatActivity extends AppCompatActivity {
         Message message = new Message(userID, username, content, time);
         message.setDate(date);
         message.setType(MessageAdapter.TYPE_RIGHT);
-//        addMessageModel(message);
         chatModels.add(message);
         messageAdapter.notifyItemInserted(chatModels.size() - 1);
 
         insertData(content, dateObject);
-//        sendNotification();
         FirebaseUtility.sendNotification(
                 ChatActivity.this,
                 Global.getService(StudentData.class).getTokens(),
@@ -398,7 +375,6 @@ public class ChatActivity extends AppCompatActivity {
                 Collections.sort(responseMessages, new Comparator<ResponseMessage>() {
                     @Override
                     public int compare(ResponseMessage message1, ResponseMessage message2) {
-//                        return message1.getTinNhanID().compareToIgnoreCase(message2.getTinNhanID());
                         return Integer.valueOf(message1.getTinNhanID()).compareTo(Integer.valueOf(message2.getTinNhanID()));
                     }
                 });
@@ -421,7 +397,7 @@ public class ChatActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<List<ResponseMessage>> call, Throwable t) {
-
+                Global.getInstance().makeToast("Lỗi");
             }
         });
     }
@@ -456,11 +432,9 @@ public class ChatActivity extends AppCompatActivity {
             Message message = new Message(studentID, studentName, content, time);
             message.setDate(date);
             message.setType(getMessageModelType(studentID, studentName));
-//            addMessageModel(message);
             chatModels.add(message);
         }
 
-//        messageAdapter.notifyDataSetChanged();
         messageAdapter.notifyItemRangeInserted(startIndex, responseMessages.size());
 
         recyclerView.scrollToPosition(chatModels.size() - 1);
@@ -503,12 +477,6 @@ public class ChatActivity extends AppCompatActivity {
         dateModel.setType(MessageAdapter.TYPE_DATE);
         chatModels.add(dateModel);
 //        messageAdapter.notifyItemInserted(chatModels.size() - 1);
-    }
-
-    private void addMessageModel(Message message) {
-        chatModels.add(message);
-        messageAdapter.notifyItemInserted(chatModels.size() - 1);
-//        recyclerView.scrollToPosition(chatModels.size() - 1);
     }
 
     private void insertData(String content, Date date) {

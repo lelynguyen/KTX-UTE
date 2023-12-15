@@ -43,10 +43,7 @@ public class MenuOptionsSvActivity extends AppCompatActivity {
         imageView3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences sharedPreferences = getSharedPreferences("Login", MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putBoolean("isLogged", false);
-                editor.apply();
+                Global.getInstance().saveSharedPreferencesValue("Login", "isLogged", false);
                 Global.setLoginStatus(false);
                 Global.getService(StudentData.class).removeToken();
 

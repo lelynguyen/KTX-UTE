@@ -128,38 +128,9 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void checkLogged() {
-        if (Global.IsLogged()) {
-            return;
-        }
-        SharedPreferences sharedPreferences = getSharedPreferences("Login", MODE_PRIVATE);
-        boolean isLogged = sharedPreferences.getBoolean("isLogged", false);
-        if (!isLogged) {
-            return;
-        }
-
-        String result = sharedPreferences.getString("result", "");
-        int userType = sharedPreferences.getInt("type", -1);
-        switch (userType) {
-            case USER_ADMIN:
-                isLoginInProcess = true;
-                Global.getService(AdminData.class).initData(result, new ITask() {
-                    @Override
-                    public void onComplete() {
-                        startIntentAdmin();
-                    }
-                });
-                break;
-            case USER_STUDENT:
-                isLoginInProcess = true;
-                Global.getService(StudentData.class).initData(result, new ITask() {
-                    @Override
-                    public void onComplete() {
-                        startIntentSV();
-                    }
-                });
-                break;
-        }
+    public void loginFailed() {
+        Global.getInstance().makeToast("Lỗi");
+        isLoginInProcess = false;
     }
 
     private void loginSuccessful(int type, String result) {
@@ -226,14 +197,21 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void unused) {
             Log.e("HttpResult", result);
-            if (!result.equals("[]")) {
+            if (result.contains("sinhVien")) {
                 loginSuccessful(USER_STUDENT, result);
-                Global.getService(StudentData.class).initData(result, new ITask() {
-                    @Override
-                    public void onComplete() {
-                        startIntentSV();
-                    }
-                });
+                Global.getService(StudentData.class).initData(
+                        result,
+                        new ITask() {
+                            @Override
+                            public void onComplete() {
+                                startIntentSV();
+                            }
+                        }, new ITask() {
+                            @Override
+                            public void onComplete() {
+                                loginFailed();
+                            }
+                        });
             } else {
                 Global.getInstance().makeToast("Sai thông tin");
                 isLoginInProcess = false;
@@ -300,12 +278,20 @@ public class LoginActivity extends AppCompatActivity {
             Log.e("HttpResult", result);
             if (result.contains("admin")) {
                 loginSuccessful(USER_ADMIN, result);
-                Global.getService(AdminData.class).initData(result, new ITask() {
-                    @Override
-                    public void onComplete() {
-                        startIntentAdmin();
-                    }
-                });
+                Global.getService(AdminData.class).initData(
+                        result,
+                        new ITask() {
+                            @Override
+                            public void onComplete() {
+                                startIntentAdmin();
+                            }
+                        },
+                        new ITask() {
+                            @Override
+                            public void onComplete() {
+                                loginFailed();
+                            }
+                        });
             } else {
                 Global.getInstance().makeToast("Sai thông tin");
                 isLoginInProcess = false;

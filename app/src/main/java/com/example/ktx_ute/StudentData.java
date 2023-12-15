@@ -103,6 +103,7 @@ public class StudentData {
 
     private ValueEventListener tokenListener;
     public void addTokenListener() {
+        Log.e("Login", "add realtime database listener");
         if (tokenListener == null) {
             tokenListener = new ValueEventListener() {
                 @Override
@@ -143,7 +144,8 @@ public class StudentData {
     }
 
     // Init after login
-    private ITask iTask;
+    private ITask iSuccessedTask;
+    private ITask iFailedTask;
 
     public void removeToken() {
         removeTokenListener();
@@ -152,8 +154,9 @@ public class StudentData {
         Global.getInstance().removeSharedPreferencesKey("FCM", "deviceID");
     }
 
-    public void initData(String result, ITask iTask) {
-        this.iTask = iTask;
+    public void initData(String result, ITask iSuccessedTask, ITask iFailedTask) {
+        this.iSuccessedTask = iSuccessedTask;
+        this.iFailedTask = iFailedTask;
         Global.getInstance().makeToast("Thiết lập dữ liệu");
         Log.e("Login", "Start initData");
         updateStudentVariables(result);
@@ -181,13 +184,20 @@ public class StudentData {
                             new ITask() {
                                 @Override
                                 public void onComplete() {
-                                    iTask.onComplete();
+                                    iSuccessedTask.onComplete();
+                                }
+                            },
+                            new ITask() {
+                                @Override
+                                public void onComplete() {
+                                    iFailedTask.onComplete();
                                 }
                             }
                     );
                 }
             });
         } catch (Exception ex) {
+            iFailedTask.onComplete();
             ex.printStackTrace();
         }
     }
@@ -235,7 +245,7 @@ public class StudentData {
                 .setValue(new UserToken(String.valueOf(userID), String.valueOf(roomNumber), currentToken, deviceID));
     }
 
-    public void updateUserToken(ITask completedTask) {
+    public void updateUserToken(ITask completedTask, ITask failedTask) {
         Log.e("Login", "updateUserToken");
         addTokenListener();
         FirebaseMessaging.getInstance().getToken()
@@ -244,6 +254,7 @@ public class StudentData {
                 public void onComplete(@NonNull Task<String> task) {
                     if (!task.isSuccessful()) {
                         Log.w("Firebase", "Fetching FCM registration token failed", task.getException());
+                        failedTask.onComplete();
                         return;
                     }
 

@@ -22,6 +22,7 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 
 import com.example.ktx_ute.activity.ChatActivity;
 import com.example.ktx_ute.activity.LoginActivity;
+import com.example.ktx_ute.activity.MainActivity;
 
 import java.util.HashMap;
 
@@ -47,7 +48,7 @@ public class Global extends Application implements LifecycleObserver {
             Log.e("Notification", "Notification - OFF");
             return;
         }
-        Intent intent = new Intent(this, LoginActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
